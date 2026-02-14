@@ -111,9 +111,30 @@ app/Domain/
 
 ---
 
-## 🔐 Авторизация
+## 🔐 Авторизация и роли
 
 Используется Laravel Breeze (Vue + TypeScript). Интерфейс входа, регистрации и профиля — на русском языке.
+
+**Роли и права** (таблицы `roles`, `permissions`, `permission_role`):
+
+| Роль | Права (slug в коде) |
+|------|----------------------|
+| **Пользователь** (user) | view_pages, read_news, view_fundraisers, make_donations, listen_media |
+| **Администратор** (admin) | Все права пользователя + manage_content, manage_fundraisers, manage_seo, manage_media, view_donation_stats |
+
+После первой миграции заполнить права:  
+`docker compose exec app php artisan db:seed --class=PermissionSeeder`
+
+При регистрации назначается роль «Пользователь». Проверка в коде: `$user->hasPermission(Permission::MANAGE_CONTENT)`. Доступ в админку только у роли admin. Чтобы выдать роль администратора:
+
+```bash
+# Первому пользователю в БД:
+docker compose exec app php artisan db:seed --class=AssignFirstAdminSeeder
+
+# Конкретному по email:
+docker compose exec app php artisan db:seed --class=AssignFirstAdminSeeder
+# и в .env задать ADMIN_EMAIL=your@email.com перед запуском сидера
+```
 
 ---
 
