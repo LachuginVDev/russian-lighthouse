@@ -25,6 +25,8 @@ RUN apk add --no-cache $PHPIZE_DEPS \
     && pecl install redis \
     && docker-php-ext-enable redis
 
+COPY docker/app/php-opcache.ini /usr/local/etc/php/conf.d/opcache-custom.ini
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY docker/app/entrypoint.sh /entrypoint.sh
