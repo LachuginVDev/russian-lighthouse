@@ -69,6 +69,13 @@
 - **Filament:** группа «Контент» — «Слайды» (изображение, текст, ссылка, порядок).
 - **Публично:** слайды передаются глобально (HandleInertiaRequests). HeroSlider на главной использует `$page.props.slides`; при наличии ссылки слайд оборачивается в `<a>` (внешние — target="_blank").
 
-## 4.6 Инфраструктура (Docker)
+## 4.6 Настройки страниц (реализовано)
+
+- **Таблица:** `home_settings` (одна запись): hero_title, hero_subtitle, hero_text_color (white | black), **logo** (nullable).
+- **Модель:** HomeSetting::get() — синглтон (firstOrCreate id=1).
+- **Filament:** группа «Контент» — страница **«Настройки страниц»** (иконка шестерёнки). Вкладка/секция «Главная — слайдер»: заголовок (H1), подзаголовок, цвет текста (белый / чёрный), **логотип** (FileUpload, диск public, directory home).
+- **Публично:** настройки передаются глобально в `$page.props.home` (в т.ч. logo — URL или null). HeroSlider выводит заголовок и подзаголовок **слева** поверх слайдов; класс текста — `text-white` или `text-gray-900`. **AppNav** в шапке при наличии `home.logo` отображает логотип (ссылка на главную).
+
+## 4.7 Инфраструктура (Docker)
 
 - **Лимиты загрузки файлов:** для видео и тяжёлых медиа в Filament/постах — `docker/app/php-uploads.ini`: `upload_max_filesize = 256M`, `post_max_size = 260M`, `max_execution_time = 300`, `memory_limit = 256M`. В nginx: `client_max_body_size 256M`, таймауты FastCGI 600 с. После изменений — пересборка образа app: `docker compose build app --no-cache`.

@@ -18,6 +18,13 @@ export interface SlideItem {
     link?: string;
 }
 
+export interface HomeSettings {
+    hero_title?: string | null;
+    hero_subtitle?: string | null;
+    hero_text_color: string;
+    logo?: string | null;
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
@@ -26,4 +33,5 @@ export type PageProps<
     };
     social_links?: SocialLinkItem[];
     slides?: SlideItem[];
+    home?: HomeSettings;
 };

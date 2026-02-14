@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import type { HomeSettings } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
 import { useTheme } from '@/composables/useTheme';
+import { computed } from 'vue';
 
 defineProps<{
     canLogin?: boolean;
@@ -8,13 +10,25 @@ defineProps<{
 }>();
 
 const { theme, toggle } = useTheme();
+const page = usePage();
+const home = computed(() => (page.props.home as HomeSettings | undefined));
+const logoUrl = computed(() => home.value?.logo ?? null);
 </script>
 
 <template>
     <nav class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 bg-white/90 px-4 py-3 backdrop-blur dark:border-gray-700 dark:bg-gray-900/90">
         <div class="flex flex-wrap items-center gap-6">
-            <Link :href="route('home')" class="text-lg font-semibold text-gray-900 dark:text-white">
-                Russian Lighthouse
+            <Link
+                :href="route('home')"
+                class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white"
+                aria-label="На главную"
+            >
+                <img
+                    v-if="logoUrl"
+                    :src="logoUrl"
+                    alt="Логотип"
+                    class="h-8 w-8 shrink-0 rounded object-contain"
+                />
             </Link>
             <div class="flex gap-1">
                 <Link

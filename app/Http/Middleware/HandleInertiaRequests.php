@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\HomeSetting;
 use App\Models\Slide;
 use App\Models\SocialLink;
 use Illuminate\Http\Request;
@@ -50,6 +51,8 @@ class HandleInertiaRequests extends Middleware
                 'link' => $slide->link,
             ]);
 
+        $homeSetting = HomeSetting::get();
+
         return [
             ...parent::share($request),
             'auth' => [
@@ -57,6 +60,14 @@ class HandleInertiaRequests extends Middleware
             ],
             'social_links' => $socialLinks,
             'slides' => $slides,
+            'home' => [
+                'hero_title' => $homeSetting->hero_title,
+                'hero_subtitle' => $homeSetting->hero_subtitle,
+                'hero_text_color' => $homeSetting->hero_text_color ?? HomeSetting::TEXT_COLOR_WHITE,
+                'logo' => $homeSetting->logo
+                    ? \Illuminate\Support\Facades\Storage::disk('public')->url($homeSetting->logo)
+                    : null,
+            ],
         ];
     }
 }
