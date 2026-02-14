@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -14,8 +15,8 @@ Route::get('/', function () {
 $publicProps = fn () => ['canLogin' => Route::has('login'), 'canRegister' => Route::has('register')];
 
 Route::get('/about', fn () => Inertia::render('About', $publicProps()))->name('about');
-Route::get('/news', fn () => Inertia::render('News/Index', ['posts' => [], ...$publicProps()]))->name('news.index');
-Route::get('/news/{id}', fn ($id) => Inertia::render('News/Show', ['id' => (int) $id, 'post' => null, ...$publicProps()]))->name('news.show');
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{idOrSlug}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/fundraisers', fn () => Inertia::render('Fundraisers/Index', ['items' => [], ...$publicProps()]))->name('fundraisers.index');
 Route::get('/fundraisers/{id}', fn ($id) => Inertia::render('Fundraisers/Show', ['id' => (int) $id, 'fundraiser' => null, ...$publicProps()]))->name('fundraisers.show');
 Route::get('/media', fn () => Inertia::render('Media/Index', $publicProps()))->name('media.index');

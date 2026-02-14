@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SocialLink;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -29,11 +30,21 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $socialLinks = SocialLink::query()
+            ->orderBy('sort_order')
+            ->get()
+            ->map(fn ($link) => [
+                'title' => $link->title,
+                'url' => $link->url,
+                'image' => $link->image ? \Illuminate\Support\Facades\Storage::url($link->image) : null,
+            ]);
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'social_links' => $socialLinks,
         ];
     }
 }

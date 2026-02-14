@@ -9,10 +9,19 @@ interface Post {
     excerpt?: string;
     date?: string;
     href?: string;
+    image?: string;
+}
+
+interface Pagination {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
 }
 
 defineProps<{
     posts: Post[];
+    pagination?: Pagination;
     canLogin?: boolean;
     canRegister?: boolean;
 }>();
@@ -31,11 +40,24 @@ defineProps<{
                     :excerpt="post.excerpt"
                     :date="post.date"
                     :href="post.href ?? route('news.show', post.id)"
+                    :image="post.image"
                 />
             </div>
-            <p v-else class="rounded-lg border border-dashed border-gray-300 bg-gray-50 py-12 text-center text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                Пока нет публикаций.
-            </p>
+            <div v-else class="rounded-lg border border-dashed border-gray-300 bg-gray-50 py-16 text-center dark:border-gray-600 dark:bg-gray-800">
+                <p class="text-gray-500 dark:text-gray-400">Пока нет публикаций.</p>
+                <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">Добавьте посты в админке: Админка → Блог → Посты.</p>
+            </div>
+            <div v-if="pagination && pagination.last_page > 1" class="mt-10 flex justify-center gap-2">
+                <a
+                    v-for="p in pagination.last_page"
+                    :key="p"
+                    :href="`/news?page=${p}`"
+                    class="rounded px-3 py-1 text-sm"
+                    :class="p === pagination.current_page ? 'bg-amber-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300'"
+                >
+                    {{ p }}
+                </a>
+            </div>
         </div>
     </PublicLayout>
 </template>

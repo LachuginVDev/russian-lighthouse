@@ -7,7 +7,7 @@
 | `/` | Welcome | Главная: hero, новости, сборы, медиа, миссия |
 | `/about` | About | О группе: описание, фото, видео, история |
 | `/news` | News/Index | Список новостей/блога, карточки постов |
-| `/news/{id}` | News/Show | Страница одного поста |
+| `/news/{idOrSlug}` | News/Show | Страница одного поста (по id или slug) |
 | `/fundraisers` | Fundraisers/Index | Список активных сборов |
 | `/fundraisers/{id}` | Fundraisers/Show | Сбор: описание, прогресс-бар, форма пожертвования |
 | `/media` | Media/Index | Медиа: видео, аудио-плеер, галерея |
@@ -31,4 +31,12 @@
 - **3.5 Медиа** — Media/Index: видео, аудио, галерея.
 - **3.6 Контакты** — Contacts: контакты, соцсети, форма обратной связи.
 
-Данные пока заглушки/пропсы; бэкенд (модели, API) — отдельный этап.
+---
+
+## 4.1 Блог (реализовано)
+
+- **Таблицы:** `posts` (title, slug, body, status, published_at, meta_title, meta_description, image, **images** JSON, **video_url**, **video_file**, category_id), `categories`, `tags`, `post_tag`, **social_links** (title, url, image, sort_order).
+- **Модели:** Post, Category, Tag, SocialLink. Post: статусы draft/published, scope published(), авто-slug; cast images → array.
+- **Filament:** группа «Блог» — Посты (CRUD: заголовок, slug, статус, дата, RichEditor, главное фото, **галерея** (множественная загрузка), **видео** — ссылка YouTube/VK или локальный файл MP4/WebM/Ogg, категория, теги, SEO), Категории, Теги. Группа «Контент» — **Соцсети** (текст, ссылка, картинка/заглушка).
+- **Публично:** `/news` — список постов с превью и пагинацией; пустой список — подсказка про админку. `/news/{idOrSlug}` — пост с галереей (лайтбокс), видео (iframe для ссылки или `<video>` для файла), SEO. Соцсети отдаются глобально (HandleInertiaRequests), блок на странице Контакты.
+- **Сидер:** `BlogSeeder` — категории «Новости», «Анонсы», теги «Концерт», «Релиз». Запуск: `php artisan db:seed --class=BlogSeeder`.
