@@ -24,6 +24,7 @@ class SocialLinkForm
                 FileUpload::make('image')
                     ->label('Картинка / заглушка')
                     ->image()
+                    ->disk('public')
                     ->directory('social')
                     ->nullable(),
                 TextInput::make('sort_order')

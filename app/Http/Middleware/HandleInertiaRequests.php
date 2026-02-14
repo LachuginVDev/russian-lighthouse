@@ -36,7 +36,7 @@ class HandleInertiaRequests extends Middleware
             ->map(fn ($link) => [
                 'title' => $link->title,
                 'url' => $link->url,
-                'image' => $link->image ? \Illuminate\Support\Facades\Storage::url($link->image) : null,
+                'image' => $link->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($link->image) : null,
             ]);
 
         return [

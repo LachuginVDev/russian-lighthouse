@@ -60,7 +60,10 @@ const lightboxImage = ref<string | null>(null);
                     :alt="post.title"
                     class="mt-4 w-full rounded-lg object-cover"
                 />
-                <div class="mt-6 prose dark:prose-invert max-w-none" v-html="post.body ?? ''" />
+                <div
+                    class="mt-6 prose prose-lg prose-gray dark:prose-invert dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-amber-600 dark:prose-a:text-amber-400 prose-img:rounded-lg max-w-none"
+                    v-html="post.body ?? ''"
+                />
 
                 <!-- Галерея -->
                 <section v-if="post.images?.length" class="mt-10">

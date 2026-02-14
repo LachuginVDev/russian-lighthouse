@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Posts\Tables;
 
 use App\Models\Post;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -45,6 +46,11 @@ class PostsTable
                 //
             ])
             ->recordActions([
+                Action::make('view_on_site')
+                    ->label('Просмотр на сайте')
+                    ->url(fn (Post $record): string => route('news.show', $record->slug))
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-o-arrow-top-right-on-square'),
                 ViewAction::make(),
                 EditAction::make(),
             ])

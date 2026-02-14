@@ -37,10 +37,12 @@ class PostForm
                                 Post::STATUS_PUBLISHED => 'Опубликован',
                             ])
                             ->default(Post::STATUS_DRAFT)
-                            ->required(),
+                            ->required()
+                            ->hint('На сайте /news отображаются только посты со статусом «Опубликован»'),
                         DateTimePicker::make('published_at')
                             ->label('Дата публикации')
-                            ->nullable(),
+                            ->nullable()
+                            ->hint('Если пусто при статусе «Опубликован» — подставится текущая дата'),
                         RichEditor::make('body')
                             ->label('Текст')
                             ->nullable()
@@ -48,11 +50,13 @@ class PostForm
                         FileUpload::make('image')
                             ->label('Главное изображение')
                             ->image()
+                            ->disk('public')
                             ->directory('posts')
                             ->nullable(),
                         FileUpload::make('images')
                             ->label('Галерея (несколько фото)')
                             ->image()
+                            ->disk('public')
                             ->directory('posts/gallery')
                             ->multiple()
                             ->reorderable()
@@ -71,6 +75,7 @@ class PostForm
                         FileUpload::make('video_file')
                             ->label('Локальное видео (MP4 и др.)')
                             ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
+                            ->disk('public')
                             ->directory('posts/videos')
                             ->nullable()
                             ->columnSpanFull(),

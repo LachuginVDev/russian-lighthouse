@@ -53,7 +53,7 @@ class Post extends Model
     {
         return $query->where('status', self::STATUS_PUBLISHED)
             ->whereNotNull('published_at')
-            ->where('published_at', '<=', now());
+            ->whereDate('published_at', '<=', now());
     }
 
     public static function boot(): void
@@ -61,7 +61,10 @@ class Post extends Model
         parent::boot();
         static::saving(function (Post $post): void {
             if (empty($post->slug) && ! empty($post->title)) {
-                $post->slug = Str::slug($post->title);
+                $post->slug = Str::slug($post->title, '-', 'ru');
+            }
+            if ($post->status === self::STATUS_PUBLISHED && $post->published_at === null) {
+                $post->published_at = now();
             }
         });
     }

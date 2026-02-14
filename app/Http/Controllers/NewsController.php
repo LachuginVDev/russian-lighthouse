@@ -26,7 +26,7 @@ class NewsController extends Controller
                     'excerpt' => $post->body ? \Illuminate\Support\Str::limit(strip_tags($post->body), 160) : null,
                     'date' => $post->published_at?->format('d.m.Y'),
                     'href' => route('news.show', $post->slug),
-                    'image' => $post->image ? \Illuminate\Support\Facades\Storage::url($post->image) : (count($images) ? \Illuminate\Support\Facades\Storage::url($images[0]) : null),
+                    'image' => $post->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($post->image) : (count($images) ? \Illuminate\Support\Facades\Storage::disk('public')->url($images[0]) : null),
                 ];
             });
 
@@ -49,7 +49,7 @@ class NewsController extends Controller
             ->published()
             ->where(fn ($q) => is_numeric($idOrSlug)
                 ? $q->where('id', (int) $idOrSlug)
-                : $q->where('slug', $idOrSlug))
+                : $q->whereRaw('LOWER(slug) = ?', [mb_strtolower($idOrSlug)]))
             ->with('category', 'tags')
             ->first();
 
@@ -67,7 +67,7 @@ class NewsController extends Controller
         }
 
         $images = $post->images ?? [];
-        $imageUrls = array_map(fn ($path) => \Illuminate\Support\Facades\Storage::url($path), $images);
+        $imageUrls = array_map(fn ($path) => \Illuminate\Support\Facades\Storage::disk('public')->url($path), $images);
 
         return Inertia::render('News/Show', [
             'id' => $post->id,
@@ -75,10 +75,10 @@ class NewsController extends Controller
                 'title' => $post->title,
                 'body' => $post->body,
                 'date' => $post->published_at?->format('d.m.Y'),
-                'image' => $post->image ? \Illuminate\Support\Facades\Storage::url($post->image) : (count($imageUrls) ? $imageUrls[0] : null),
+                'image' => $post->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($post->image) : (count($imageUrls) ? $imageUrls[0] : null),
                 'images' => $imageUrls,
                 'video_url' => $post->video_url,
-                'video_file' => $post->video_file ? \Illuminate\Support\Facades\Storage::url($post->video_file) : null,
+                'video_file' => $post->video_file ? \Illuminate\Support\Facades\Storage::disk('public')->url($post->video_file) : null,
                 'meta_title' => $post->meta_title,
                 'meta_description' => $post->meta_description,
             ],

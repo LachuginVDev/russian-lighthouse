@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { useTheme } from '@/composables/useTheme';
 
 defineProps<{
     canLogin?: boolean;
     canRegister?: boolean;
 }>();
+
+const { theme, toggle } = useTheme();
 </script>
 
 <template>
@@ -52,7 +55,16 @@ defineProps<{
                 </Link>
             </div>
         </div>
-        <div class="flex gap-2">
+        <div class="flex items-center gap-2">
+            <button
+                type="button"
+                :aria-label="theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'"
+                class="rounded p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                @click="toggle"
+            >
+                <span v-if="theme === 'dark'" class="text-lg" title="Светлая тема">☀️</span>
+                <span v-else class="text-lg" title="Тёмная тема">🌙</span>
+            </button>
             <template v-if="$page.props.auth?.user">
                 <Link
                     :href="route('dashboard')"
