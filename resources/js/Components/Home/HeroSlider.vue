@@ -1,27 +1,23 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
-/**
- * Слайдер фона главной страницы.
- * Принимает массив слайдов (изображения/URL), автоматическая смена.
- */
-interface Slide {
+interface SlideItem {
     id: number;
     imageUrl: string;
     alt?: string;
+    link?: string;
 }
 
 const props = defineProps<{
-    slides?: Slide[];
+    slides?: SlideItem[];
     intervalMs?: number;
 }>();
 
-const defaultSlides: Slide[] = [
-    { id: 1, imageUrl: '', alt: 'Фон 1' },
-    { id: 2, imageUrl: '', alt: 'Фон 2' },
-];
+const page = usePage();
+const slidesFromShared = (page.props.slides as SlideItem[] | undefined) ?? [];
 
-const list = computed(() => (props.slides?.length ? props.slides : defaultSlides));
+const list = computed(() => (props.slides?.length ? props.slides : slidesFromShared));
 const current = ref(0);
 let timer: ReturnType<typeof setInterval> | null = null;
 
@@ -50,16 +46,24 @@ onUnmounted(() => {
                     class="absolute inset-0 flex-shrink-0 transition-opacity duration-700"
                     :class="index === current ? 'opacity-100' : 'opacity-0'"
                 >
-                    <img
-                        v-if="slide.imageUrl"
-                        :src="slide.imageUrl"
-                        :alt="slide.alt ?? ''"
-                        class="h-full w-full object-cover"
-                    />
-                    <div
-                        v-else
-                        class="h-full w-full bg-gradient-to-br from-amber-900/80 to-gray-900"
-                    />
+                    <component
+                        :is="slide.link ? 'a' : 'div'"
+                        :href="slide.link"
+                        :target="slide.link?.startsWith('http') ? '_blank' : undefined"
+                        :rel="slide.link?.startsWith('http') ? 'noopener' : undefined"
+                        class="block h-full w-full"
+                    >
+                        <img
+                            v-if="slide.imageUrl"
+                            :src="slide.imageUrl"
+                            :alt="slide.alt ?? ''"
+                            class="h-full w-full object-cover"
+                        />
+                        <div
+                            v-else
+                            class="h-full w-full bg-gradient-to-br from-amber-900/80 to-gray-900"
+                        />
+                    </component>
                 </div>
             </template>
             <div

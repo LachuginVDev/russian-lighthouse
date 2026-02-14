@@ -26,6 +26,7 @@ RUN apk add --no-cache $PHPIZE_DEPS \
     && docker-php-ext-enable redis
 
 COPY docker/app/php-opcache.ini /usr/local/etc/php/conf.d/opcache-custom.ini
+COPY docker/app/php-uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

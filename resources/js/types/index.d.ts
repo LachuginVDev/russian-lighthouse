@@ -11,6 +11,13 @@ export interface SocialLinkItem {
     image: string | null;
 }
 
+export interface SlideItem {
+    id: number;
+    imageUrl: string;
+    alt?: string;
+    link?: string;
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
@@ -18,4 +25,5 @@ export type PageProps<
         user?: User & { role_id?: number };
     };
     social_links?: SocialLinkItem[];
+    slides?: SlideItem[];
 };

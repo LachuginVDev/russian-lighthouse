@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Slide;
 use App\Models\SocialLink;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -39,12 +40,23 @@ class HandleInertiaRequests extends Middleware
                 'image' => $link->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($link->image) : null,
             ]);
 
+        $slides = Slide::query()
+            ->orderBy('sort_order')
+            ->get()
+            ->map(fn ($slide) => [
+                'id' => $slide->id,
+                'imageUrl' => \Illuminate\Support\Facades\Storage::disk('public')->url($slide->image),
+                'alt' => $slide->text,
+                'link' => $slide->link,
+            ]);
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
             'social_links' => $socialLinks,
+            'slides' => $slides,
         ];
     }
 }

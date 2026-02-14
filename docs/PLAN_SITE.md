@@ -54,3 +54,21 @@
   - В форме поста: подсказки у полей «Статус» и «Дата публикации». При сохранении со статусом «Опубликован» и пустой датой подставляется `published_at = now()`. Кнопка «Просмотр на сайте» (ViewPost, EditPost, таблица постов) — ссылка на `/news/{slug}` в новой вкладке.
 - **Публикация постов**
   - Scope `published()`: по дате `whereDate('published_at', '<=', now())`, без проверки времени. Slug: генерация с локалью `ru`; поиск по slug без учёта регистра (LOWER(slug)).
+
+## 4.4 Медиа (реализовано)
+
+- **Таблицы:** `media_playlists` (title, sort_order), `media_items` (media_playlist_id nullable, type: video_url/video_file/image, title, video_url, video_file, image, sort_order).
+- **Модели:** MediaPlaylist (hasMany MediaItem), MediaItem (константы TYPE_*).
+- **Filament:** группа «Контент» — «Плейлисты» (CRUD), «Элементы медиа» (тип, плейлист опционально, ссылка/файл/картинка, сортировка).
+- **Публично:** `/media` — мини-плеер (текущее видео: iframe для ссылки, `<video>` для файла), плейлист (клик — смена видео), галерея изображений с лайтбоксом. Данные из MediaController.
+
+## 4.5 Слайдеры (реализовано)
+
+- **Таблица:** `slides` (image, text, link, sort_order).
+- **Модель:** Slide.
+- **Filament:** группа «Контент» — «Слайды» (изображение, текст, ссылка, порядок).
+- **Публично:** слайды передаются глобально (HandleInertiaRequests). HeroSlider на главной использует `$page.props.slides`; при наличии ссылки слайд оборачивается в `<a>` (внешние — target="_blank").
+
+## 4.6 Инфраструктура (Docker)
+
+- **Лимиты загрузки файлов:** для видео и тяжёлых медиа в Filament/постах — `docker/app/php-uploads.ini`: `upload_max_filesize = 256M`, `post_max_size = 260M`, `max_execution_time = 300`, `memory_limit = 256M`. В nginx: `client_max_body_size 256M`, таймауты FastCGI 600 с. После изменений — пересборка образа app: `docker compose build app --no-cache`.
