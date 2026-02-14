@@ -1,0 +1,68 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    image: russian-lighthouse-app
+    container_name: russian-lighthouse-app
+    restart: unless-stopped
+    working_dir: /var/www
+    entrypoint: ["/entrypoint.sh"]
+    command: ["php-fpm"]
+    volumes:
+      - .:/var/www
+    networks:
+      - lighthouse
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:alpine
+    container_name: russian-lighthouse-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - lighthouse
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: russian-lighthouse-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-lighthouse}
+      POSTGRES_USER: ${DB_USERNAME:-lighthouse}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - lighthouse
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: russian-lighthouse-redis
+    restart: unless-stopped
+    networks:
+      - lighthouse
+
+networks:
+  lighthouse:
+    driver: bridge
+
+volumes:
+  postgres-data:
