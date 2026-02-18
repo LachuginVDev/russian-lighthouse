@@ -20,10 +20,20 @@ interface Album {
     photos: AlbumPhoto[];
 }
 
+interface NewsItem {
+    id: number;
+    title: string;
+    excerpt?: string | null;
+    date?: string | null;
+    href?: string | null;
+    image?: string | null;
+}
+
 const props = defineProps<{
     canLogin?: boolean;
     canRegister?: boolean;
     albums?: Album[];
+    news?: NewsItem[];
 }>();
 
 const page = usePage();
@@ -43,7 +53,7 @@ const canonicalUrl = `${page.props.app_url ?? ''}${route('home')}`;
             <meta property="og:type" content="website" />
         </Head>
         <HeroBlock :albums="albums ?? []" />
-        <NewsSlider />
+        <NewsSlider :items="news ?? []" />
         <ActiveFundraisers />
         <MediaBlock />
         <MissionBlock />

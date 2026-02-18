@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -29,10 +31,28 @@ Route::get('/', function () {
             ];
         });
 
+    $news = Post::query()
+        ->published()
+        ->orderByDesc('published_at')
+        ->limit(12)
+        ->get()
+        ->map(function (Post $post) {
+            $images = $post->images ?? [];
+            return [
+                'id' => $post->id,
+                'title' => $post->title,
+                'excerpt' => $post->body ? \Illuminate\Support\Str::limit(strip_tags($post->body), 160) : null,
+                'date' => $post->published_at?->format('d.m.Y'),
+                'href' => route('news.show', $post->slug),
+                'image' => $post->image ? Storage::disk('public')->url($post->image) : (count($images) ? Storage::disk('public')->url($images[0]) : null),
+            ];
+        });
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'albums' => $albums,
+        'news' => $news,
     ]);
 })->name('home');
 

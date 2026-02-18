@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PhotoAlbums\RelationManagers;
 
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -64,7 +65,7 @@ class PhotosRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()
                     ->label('Добавить фото'),
-                \Filament\Tables\Actions\Action::make('addMultiple')
+                Action::make('addMultiple')
                     ->label('Добавить несколько фото')
                     ->icon('heroicon-o-photo')
                     ->form([
