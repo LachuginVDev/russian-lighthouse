@@ -33,13 +33,15 @@ const currentPhoto = computed(() => {
 });
 
 function openAlbum(album: Album) {
-    if (!album.photos.length) return;
+    if (!album.photos?.length) return;
     openedAlbum.value = album;
     currentIndex.value = 0;
+    document.body.style.overflow = 'hidden';
 }
 
 function closeGallery() {
     openedAlbum.value = null;
+    document.body.style.overflow = '';
 }
 
 function prev() {
@@ -75,18 +77,19 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     v-for="album in albums"
                     :key="album.id"
                     type="button"
-                    class="group block text-left"
+                    class="group block w-full cursor-pointer text-left transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                     :disabled="!album.photos?.length"
+                    :aria-label="album.photos?.length ? `Открыть альбом: ${album.title}` : 'В альбоме нет фото'"
                     @click="openAlbum(album)"
                 >
                     <div
-                        class="aspect-[4/3] overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700"
+                        class="aspect-[4/3] overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700 ring-1 ring-gray-200 dark:ring-gray-600 transition group-hover:ring-amber-500/50"
                     >
                         <img
                             v-if="album.cover"
                             :src="album.cover"
                             :alt="album.title"
-                            class="h-full w-full object-cover transition group-hover:scale-105"
+                            class="h-full w-full object-cover transition duration-200 group-hover:scale-105"
                             loading="lazy"
                         />
                         <div
@@ -99,8 +102,8 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     <p class="mt-2 font-medium text-gray-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400">
                         {{ album.title }}
                     </p>
-                    <p v-if="album.photos?.length" class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ album.photos.length }} {{ album.photos.length === 1 ? 'фото' : 'фото' }}
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ album.photos?.length ?? 0 }} {{ (album.photos?.length ?? 0) === 1 ? 'фото' : 'фото' }}
                     </p>
                 </button>
             </div>
@@ -136,18 +139,23 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     <button
                         v-if="openedAlbum.photos.length > 1"
                         type="button"
-                        class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/20 p-3 text-white hover:bg-white/30"
-                        aria-label="Назад"
+                        class="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/20 p-3 text-2xl text-white hover:bg-white/30 sm:left-4"
+                        aria-label="Предыдущее фото"
                         @click.stop="prev"
                     >
                         ‹
                     </button>
-                    <div class="flex max-h-full max-w-full flex-col items-center">
+                    <div
+                        class="flex max-h-full max-w-full flex-col items-center"
+                        :class="openedAlbum.photos.length > 1 ? 'cursor-pointer' : 'cursor-default'"
+                        @click.stop="openedAlbum.photos.length > 1 && next()"
+                    >
                         <img
                             v-if="currentPhoto"
                             :src="currentPhoto.image"
                             :alt="currentPhoto.caption ?? openedAlbum.title"
-                            class="max-h-[70vh] max-w-full object-contain"
+                            class="max-h-[70vh] max-w-full select-none object-contain"
+                            draggable="false"
                         />
                         <p
                             v-if="currentPhoto?.caption"
@@ -165,8 +173,8 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     <button
                         v-if="openedAlbum.photos.length > 1"
                         type="button"
-                        class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/20 p-3 text-white hover:bg-white/30"
-                        aria-label="Вперёд"
+                        class="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/20 p-3 text-2xl text-white hover:bg-white/30 sm:right-4"
+                        aria-label="Следующее фото"
                         @click.stop="next"
                     >
                         ›

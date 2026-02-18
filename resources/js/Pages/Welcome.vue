@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import PublicLayout from '@/Layouts/PublicLayout.vue';
-import HeroSlider from '@/Components/Home/HeroSlider.vue';
 import HeroBlock from '@/Components/Home/HeroBlock.vue';
 import NewsSlider from '@/Components/Home/NewsSlider.vue';
 import ActiveFundraisers from '@/Components/Home/ActiveFundraisers.vue';
@@ -9,9 +8,22 @@ import MissionBlock from '@/Components/Home/MissionBlock.vue';
 import { Head, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
+interface AlbumPhoto {
+    id: number;
+    image: string;
+    caption?: string | null;
+}
+interface Album {
+    id: number;
+    title: string;
+    cover: string | null;
+    photos: AlbumPhoto[];
+}
+
 const props = defineProps<{
     canLogin?: boolean;
     canRegister?: boolean;
+    albums?: Album[];
 }>();
 
 const page = usePage();
@@ -30,8 +42,7 @@ const canonicalUrl = `${page.props.app_url ?? ''}${route('home')}`;
             <meta property="og:url" :content="canonicalUrl" />
             <meta property="og:type" content="website" />
         </Head>
-        <HeroSlider />
-        <HeroBlock />
+        <HeroBlock :albums="albums ?? []" />
         <NewsSlider />
         <ActiveFundraisers />
         <MediaBlock />

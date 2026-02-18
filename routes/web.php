@@ -6,9 +6,33 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    $albums = \App\Models\PhotoAlbum::query()
+        ->with(['photos'])
+        ->orderBy('sort_order')
+        ->orderBy('id')
+        ->limit(6)
+        ->get()
+        ->map(function (\App\Models\PhotoAlbum $album) {
+            $coverPath = $album->cover_image ?: $album->photos->first()?->image;
+            $coverUrl = $coverPath ? \Illuminate\Support\Facades\Storage::disk('public')->url($coverPath) : null;
+            $photos = $album->photos->map(fn ($p) => [
+                'id' => $p->id,
+                'image' => \Illuminate\Support\Facades\Storage::disk('public')->url($p->image),
+                'caption' => $p->caption,
+            ])->values()->all();
+
+            return [
+                'id' => $album->id,
+                'title' => $album->title,
+                'cover' => $coverUrl,
+                'photos' => $photos,
+            ];
+        });
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'albums' => $albums,
     ]);
 })->name('home');
 

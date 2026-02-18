@@ -59,6 +59,8 @@ class PhotosRelationManager extends RelationManager
                     ->sortable(),
             ])
             ->defaultSort('sort_order')
+            ->reorderable('sort_order')
+            ->authorizeReorder(true)
             ->headerActions([
                 CreateAction::make()
                     ->label('Добавить фото'),
@@ -105,5 +107,10 @@ class PhotosRelationManager extends RelationManager
             ->title($created ? "Добавлено фото: {$created}" : 'Нет новых фото')
             ->success()
             ->send();
+    }
+
+    protected function getTableReorderColumn(): ?string
+    {
+        return 'sort_order';
     }
 }
