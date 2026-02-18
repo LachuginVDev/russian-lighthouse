@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PublicLayout from '@/Layouts/PublicLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
 interface MediaItemType {
@@ -45,12 +45,24 @@ const currentVideo = computed(() => videoList.value[currentIndex.value] ?? null)
 
 const imageList = computed(() => props.imageItems ?? []);
 const lightboxImage = ref<string | null>(null);
+
+const page = usePage();
+const seo = computed(() => page.props.page_seo?.media);
+const canonicalUrl = `${page.props.app_url ?? ''}${route('media.index')}`;
 </script>
 
 <template>
-    <PublicLayout title="Медиа" :can-login="canLogin" :can-register="canRegister">
+    <PublicLayout :title="seo?.meta_title ?? 'Медиа'" :can-login="canLogin" :can-register="canRegister">
         <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <Head title="Медиа" />
+            <Head :title="seo?.meta_title ?? 'Медиа'">
+                <meta v-if="seo?.meta_description" name="description" :content="seo.meta_description" />
+                <link rel="canonical" :href="canonicalUrl" />
+                <meta v-if="seo?.meta_title" property="og:title" :content="seo.meta_title" />
+                <meta v-if="seo?.meta_description" property="og:description" :content="seo.meta_description" />
+                <meta v-if="seo?.og_image" property="og:image" :content="seo.og_image" />
+                <meta property="og:url" :content="canonicalUrl" />
+                <meta property="og:type" content="website" />
+            </Head>
             <h1 class="mb-8 text-3xl font-bold text-gray-900 dark:text-white">Медиа</h1>
 
             <!-- Мини-плеер -->
@@ -132,6 +144,7 @@ const lightboxImage = ref<string | null>(null);
                             :src="item.image"
                             :alt="item.title ?? `Фото ${i + 1}`"
                             class="h-full w-full object-cover"
+                            loading="lazy"
                         />
                     </button>
                 </div>

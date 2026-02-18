@@ -1,0 +1,14 @@
+# Уменьшение контекста и образа при docker build (в т.ч. Dockerfile.prod)
+.git
+.gitignore
+node_modules
+public/build
+public/hot
+.env
+.env.*
+!.env.example
+*.md
+docs
+.idea
+tests
+vendor

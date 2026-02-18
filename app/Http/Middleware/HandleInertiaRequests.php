@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\HomeSetting;
+use App\Models\PageSeo;
 use App\Models\Slide;
 use App\Models\SocialLink;
 use Illuminate\Http\Request;
@@ -53,13 +54,27 @@ class HandleInertiaRequests extends Middleware
 
         $homeSetting = HomeSetting::get();
 
+        $pageSeo = PageSeo::query()
+            ->get()
+            ->keyBy('page_slug')
+            ->map(fn (PageSeo $p) => [
+                'meta_title' => $p->meta_title,
+                'meta_description' => $p->meta_description,
+                'og_image' => $p->og_image
+                    ? \Illuminate\Support\Facades\Storage::disk('public')->url($p->og_image)
+                    : null,
+            ])
+            ->toArray();
+
         return [
             ...parent::share($request),
+            'app_url' => config('app.url'),
             'auth' => [
                 'user' => $request->user(),
             ],
             'social_links' => $socialLinks,
             'slides' => $slides,
+            'page_seo' => $pageSeo,
             'home' => [
                 'hero_title' => $homeSetting->hero_title,
                 'hero_subtitle' => $homeSetting->hero_subtitle,

@@ -62,6 +62,12 @@ const logoUrl = computed(() => home.value?.logo ?? null);
                     Медиа
                 </Link>
                 <Link
+                    :href="route('albums.index')"
+                    class="rounded px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                >
+                    Фотоальбомы
+                </Link>
+                <Link
                     :href="route('contacts')"
                     class="rounded px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                 >

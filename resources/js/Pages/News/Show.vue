@@ -15,6 +15,8 @@ defineProps<{
         video_file?: string;
         meta_title?: string;
         meta_description?: string;
+        canonical_url?: string;
+        og_image?: string | null;
     } | null;
     canLogin?: boolean;
     canRegister?: boolean;
@@ -47,6 +49,12 @@ const lightboxImage = ref<string | null>(null);
         <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
             <Head :title="post?.meta_title ?? post?.title ?? 'Новость'">
                 <meta v-if="post?.meta_description" name="description" :content="post.meta_description" />
+                <link v-if="post?.canonical_url" rel="canonical" :href="post.canonical_url" />
+                <meta v-if="post?.meta_title ?? post?.title" property="og:title" :content="post?.meta_title ?? post?.title ?? 'Новость'" />
+                <meta v-if="post?.meta_description" property="og:description" :content="post.meta_description" />
+                <meta v-if="post?.og_image" property="og:image" :content="post.og_image" />
+                <meta v-if="post?.canonical_url" property="og:url" :content="post.canonical_url" />
+                <meta property="og:type" content="article" />
             </Head>
             <Link :href="route('news.index')" class="text-sm text-amber-600 hover:text-amber-500 dark:text-amber-400">
                 ← К списку новостей
@@ -58,6 +66,7 @@ const lightboxImage = ref<string | null>(null);
                     v-if="post.image"
                     :src="post.image"
                     :alt="post.title"
+                    loading="lazy"
                     class="mt-4 w-full rounded-lg object-cover"
                 />
                 <div
@@ -76,7 +85,7 @@ const lightboxImage = ref<string | null>(null);
                             class="aspect-square overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
                             @click="lightboxImage = img"
                         >
-                            <img :src="img" :alt="`${post.title} — фото ${i + 1}`" class="h-full w-full object-cover" />
+                            <img :src="img" :alt="`${post.title} — фото ${i + 1}`" class="h-full w-full object-cover" loading="lazy" />
                         </button>
                     </div>
                 </section>

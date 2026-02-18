@@ -42,11 +42,12 @@ class PageSettings extends Page
     protected function fillForm(): void
     {
         $setting = HomeSetting::get();
+        $logo = $setting->logo;
         $this->data = [
             'hero_title' => $setting->hero_title,
             'hero_subtitle' => $setting->hero_subtitle,
             'hero_text_color' => $setting->hero_text_color ?? HomeSetting::TEXT_COLOR_WHITE,
-            'logo' => $setting->logo,
+            'logo' => $logo ? (is_array($logo) ? $logo : [$logo]) : [],
         ];
     }
 
@@ -61,7 +62,8 @@ class PageSettings extends Page
             $setting->hero_title = $data['hero_title'] ?? null;
             $setting->hero_subtitle = $data['hero_subtitle'] ?? null;
             $setting->hero_text_color = $data['hero_text_color'] ?? HomeSetting::TEXT_COLOR_WHITE;
-            $setting->logo = $data['logo'] ?? null;
+            $logo = $data['logo'] ?? null;
+            $setting->logo = is_array($logo) ? ($logo[0] ?? null) : $logo;
             $setting->save();
 
             $this->commitDatabaseTransaction();

@@ -17,10 +17,13 @@ $publicProps = fn () => ['canLogin' => Route::has('login'), 'canRegister' => Rou
 Route::get('/about', fn () => Inertia::render('About', $publicProps()))->name('about');
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{idOrSlug}', [NewsController::class, 'show'])->name('news.show');
-Route::get('/fundraisers', fn () => Inertia::render('Fundraisers/Index', ['items' => [], ...$publicProps()]))->name('fundraisers.index');
-Route::get('/fundraisers/{id}', fn ($id) => Inertia::render('Fundraisers/Show', ['id' => (int) $id, 'fundraiser' => null, ...$publicProps()]))->name('fundraisers.show');
+Route::get('/fundraisers', [\App\Http\Controllers\FundraiserController::class, 'index'])->name('fundraisers.index');
+Route::get('/fundraisers/{id}', fn (int $id) => app(\App\Http\Controllers\FundraiserController::class)->show(request(), $id))->name('fundraisers.show');
+Route::post('/fundraisers/{id}/donate', [\App\Http\Controllers\FundraiserController::class, 'storeDonation'])->name('fundraisers.donate');
 Route::get('/media', [\App\Http\Controllers\MediaController::class, 'index'])->name('media.index');
+Route::get('/albums', [\App\Http\Controllers\AlbumController::class, 'index'])->name('albums.index');
 Route::get('/contacts', fn () => Inertia::render('Contacts', $publicProps()))->name('contacts');
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, '__invoke'])->name('sitemap');
 Route::post('/contacts', function (\Illuminate\Http\Request $request) {
     $request->validate(['name' => 'required|string|max:255', 'email' => 'required|email', 'message' => 'required|string|max:5000']);
     // TODO: отправить письмо / в очередь
@@ -32,6 +35,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/admin/export/donations', [\App\Http\Controllers\Admin\DonationExportController::class, '__invoke'])
+        ->middleware('admin')
+        ->name('admin.export.donations');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

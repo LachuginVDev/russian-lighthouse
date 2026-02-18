@@ -68,6 +68,7 @@ onUnmounted(() => {
                             :src="slide.imageUrl"
                             :alt="slide.alt ?? ''"
                             class="h-full w-full object-cover"
+                            loading="lazy"
                         />
                         <div
                             v-else
@@ -80,6 +81,7 @@ onUnmounted(() => {
                             :src="slide.imageUrl"
                             :alt="slide.alt ?? ''"
                             class="h-full w-full object-cover"
+                            loading="lazy"
                         />
                         <div
                             v-else

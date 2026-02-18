@@ -6,8 +6,6 @@ RUN apk add --no-cache \
     zip \
     unzip \
     git \
-    nodejs \
-    npm \
     icu-dev \
     oniguruma-dev
 

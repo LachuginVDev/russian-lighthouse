@@ -12,8 +12,9 @@ export default defineConfig({
             '@': path.resolve(__dirname, 'resources/js'),
         },
     },
+    // Vite запускается на хосте (не в Docker). Бэкенд — localhost:8000.
     server: {
-        host: '0.0.0.0',
+        host: 'localhost',
         port: 5173,
         strictPort: true,
         hmr: {

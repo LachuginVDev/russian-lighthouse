@@ -16,7 +16,7 @@ defineProps<{
         class="rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-900"
     >
         <a v-if="image && href" :href="href" class="block aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
-            <img :src="image" :alt="title" class="h-full w-full object-cover" />
+            <img :src="image" :alt="title" class="h-full w-full object-cover" loading="lazy" />
         </a>
         <div class="p-5">
             <time v-if="date" class="text-sm text-gray-500 dark:text-gray-400">{{ date }}</time>

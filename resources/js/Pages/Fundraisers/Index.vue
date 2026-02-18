@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import PublicLayout from '@/Layouts/PublicLayout.vue';
-import Card from '@/Components/Card.vue';
 import ProgressBar from '@/Components/ProgressBar.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 interface Fundraiser {
     id: number;
@@ -18,12 +18,24 @@ defineProps<{
     canLogin?: boolean;
     canRegister?: boolean;
 }>();
+
+const page = usePage();
+const seo = computed(() => page.props.page_seo?.fundraisers);
+const canonicalUrl = `${page.props.app_url ?? ''}${route('fundraisers.index')}`;
 </script>
 
 <template>
-    <PublicLayout title="Сборы" :can-login="canLogin" :can-register="canRegister">
+    <PublicLayout :title="seo?.meta_title ?? 'Сборы'" :can-login="canLogin" :can-register="canRegister">
         <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <Head title="Сборы" />
+            <Head :title="seo?.meta_title ?? 'Сборы'">
+                <meta v-if="seo?.meta_description" name="description" :content="seo.meta_description" />
+                <link rel="canonical" :href="canonicalUrl" />
+                <meta v-if="seo?.meta_title" property="og:title" :content="seo.meta_title" />
+                <meta v-if="seo?.meta_description" property="og:description" :content="seo.meta_description" />
+                <meta v-if="seo?.og_image" property="og:image" :content="seo.og_image" />
+                <meta property="og:url" :content="canonicalUrl" />
+                <meta property="og:type" content="website" />
+            </Head>
             <h1 class="mb-8 text-3xl font-bold text-gray-900 dark:text-white">Текущие сборы</h1>
             <div v-if="items?.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <a

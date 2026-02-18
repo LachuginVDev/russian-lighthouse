@@ -25,13 +25,21 @@ export interface HomeSettings {
     logo?: string | null;
 }
 
+export interface PageSeoItem {
+    meta_title?: string | null;
+    meta_description?: string | null;
+    og_image?: string | null;
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
+    app_url?: string;
     auth: {
         user?: User & { role_id?: number };
     };
     social_links?: SocialLinkItem[];
     slides?: SlideItem[];
     home?: HomeSettings;
+    page_seo?: Record<string, PageSeoItem>;
 };
