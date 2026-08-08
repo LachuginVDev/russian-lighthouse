@@ -18,21 +18,67 @@
         <div class="hero__media-layer" data-hero-img></div>
       </div>
       <div class="hero__beam" aria-hidden="true"></div>
-      <canvas class="hero__particles" aria-hidden="true" data-particles></canvas>
+      <canvas
+        class="hero__particles"
+        aria-hidden="true"
+        data-particles
+        data-particles-origin="[data-hero-beacon-origin]"
+        data-particles-count="52"
+        data-particles-spread="160"
+      ></canvas>
       <div class="hero__overlay" aria-hidden="true"></div>
 
       <div class="container hero__inner">
-        <p class="eyebrow hero__eyebrow" data-reveal>{{ $settings->hero_eyebrow ?: 'Музыка. Память. Единство.' }}</p>
-        <h1 class="hero__title" data-split-text>{{ $settings->hero_title ?: 'Русский Маяк' }}</h1>
-        <p class="lead hero__subtitle" data-reveal>
-          {{ $settings->hero_subtitle ?: 'Мы пишем песни о силе духа и едем туда, где эта сила нужна больше всего — в госпитали и в зону проведения СВО.' }}
-        </p>
-        <div class="hero__actions" data-reveal>
-          <a class="btn btn--primary" href="#music">
-            <svg aria-hidden="true"><use href="#icon-play" /></svg>
-            Слушать музыку
-          </a>
-          <a class="btn btn--outline" href="#fundraising">Поддержать сбор</a>
+        <div class="hero__content">
+          <p class="eyebrow hero__eyebrow" data-reveal>{{ $settings->hero_eyebrow ?: 'Музыка. Память. Единство.' }}</p>
+          <h1 class="hero__title" data-split-text>{{ $settings->hero_title ?: 'Русский Маяк' }}</h1>
+          <p class="lead hero__subtitle" data-reveal>
+            {{ $settings->hero_subtitle ?: 'Мы пишем песни о силе духа и едем туда, где эта сила нужна больше всего — в госпитали и в зону проведения СВО.' }}
+          </p>
+          <div class="hero__actions" data-reveal>
+            <a class="btn btn--primary" href="#music">
+              <svg aria-hidden="true"><use href="#icon-play" /></svg>
+              Слушать музыку
+            </a>
+            <a class="btn btn--outline" href="#fundraising">Поддержать сбор</a>
+          </div>
+        </div>
+
+        <div class="hero__visual" aria-hidden="true">
+          <div class="hero__beacon">
+            <span class="hero__beacon-rays"></span>
+            <svg class="hero__beacon-svg" viewBox="0 0 240 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="heroBeaconTower" x1="120" y1="80" x2="120" y2="330" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#2a3348"/>
+                  <stop offset="1" stop-color="#12161f"/>
+                </linearGradient>
+                <linearGradient id="heroBeaconLantern" x1="120" y1="48" x2="120" y2="96" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#ffe7a8"/>
+                  <stop offset="1" stop-color="#e6c67c"/>
+                </linearGradient>
+                <radialGradient id="heroBeaconHalo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(120 68) rotate(90) scale(54)">
+                  <stop stop-color="#ffe7a8" stop-opacity="0.85"/>
+                  <stop offset="1" stop-color="#e6c67c" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <ellipse cx="120" cy="328" rx="78" ry="14" fill="#0a0c10" opacity="0.55"/>
+              <path d="M62 318h116l-10 18H72l-10-18Z" fill="#1a2030" stroke="#3a445c" stroke-width="1.5"/>
+              <path d="M78 318V148h84v170H78Z" fill="url(#heroBeaconTower)" stroke="#4a5670" stroke-width="1.5"/>
+              <path d="M78 200h84M78 248h84" stroke="#e6c67c" stroke-opacity="0.35" stroke-width="1.5"/>
+              <path d="M96 148v170M144 148v170" stroke="#ffffff" stroke-opacity="0.06" stroke-width="10"/>
+              <rect x="70" y="132" width="100" height="18" rx="2" fill="#1c2436" stroke="#5a6784" stroke-width="1.5"/>
+              <path d="M88 132V98h64v34H88Z" fill="#161c2a" stroke="#6b7a99" stroke-width="1.5"/>
+              <circle cx="120" cy="68" r="54" fill="url(#heroBeaconHalo)"/>
+              <circle class="hero__beacon-origin" data-hero-beacon-origin cx="120" cy="72" r="10" fill="url(#heroBeaconLantern)"/>
+              <path d="M98 98h44l-8-18H106l-8 18Z" fill="#2a3348" stroke="#7a879f" stroke-width="1.2"/>
+              <path d="M104 80h32v18h-32V80Z" fill="#0f131c" stroke="#e6c67c" stroke-opacity="0.55" stroke-width="1.2"/>
+              <path d="M112 80v18M128 80v18" stroke="#e6c67c" stroke-opacity="0.4"/>
+              <path d="M100 64h40l-6-16H106l-6 16Z" fill="#243049" stroke="#c9b07a" stroke-width="1.2"/>
+              <path d="M120 36v12" stroke="#ffe7a8" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="120" cy="34" r="3.5" fill="#ffe7a8"/>
+            </svg>
+          </div>
         </div>
       </div>
 

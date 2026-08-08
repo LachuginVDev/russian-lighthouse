@@ -4,16 +4,21 @@ export function initHeroEntrance() {
   const eyebrow = document.querySelector('.hero__eyebrow');
   const subtitle = document.querySelector('.hero__subtitle');
   const actions = document.querySelector('.hero__actions');
+  const visual = document.querySelector('.hero__visual');
 
   if (prefersReducedMotion || !eyebrow || !subtitle || !actions) return;
 
-  gsap.set([eyebrow, subtitle, actions], { opacity: 0, y: 24 });
+  const intro = [eyebrow, subtitle, actions];
+  if (visual) intro.push(visual);
+
+  gsap.set(intro, { opacity: 0, y: 24 });
 
   gsap
     .timeline({ delay: 0.1 })
     .to(eyebrow, { opacity: 1, y: 0, duration: 0.7 })
     .to(subtitle, { opacity: 1, y: 0, duration: 0.8 }, 1.1)
-    .to(actions, { opacity: 1, y: 0, duration: 0.8 }, 1.35);
+    .to(actions, { opacity: 1, y: 0, duration: 0.8 }, 1.35)
+    .to(visual, { opacity: 1, y: 0, duration: 1 }, 0.45);
 }
 
 export function initHeroParallax() {
