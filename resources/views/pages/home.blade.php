@@ -23,6 +23,7 @@
         aria-hidden="true"
         data-particles
         data-particles-origin="[data-hero-beacon-origin]"
+        data-particles-mode="emit"
         data-particles-count="52"
         data-particles-spread="160"
       ></canvas>

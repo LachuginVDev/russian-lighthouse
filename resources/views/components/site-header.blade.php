@@ -6,8 +6,9 @@
           class="header__logo-particles"
           data-particles
           data-particles-origin="self"
-          data-particles-count="14"
-          data-particles-spread="28"
+          data-particles-mode="halo"
+          data-particles-count="22"
+          data-particles-spread="26"
           aria-hidden="true"
         ></canvas>
         <svg viewBox="0 0 24 24"><use href="#icon-beacon" /></svg>
