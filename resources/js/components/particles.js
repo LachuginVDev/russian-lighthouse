@@ -20,6 +20,7 @@ function mountParticles(canvas) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
+  const host = canvas.closest('.hero') || canvas.parentElement || canvas;
   const count = Number(canvas.dataset.particlesCount) || 48;
   const spread = Number(canvas.dataset.particlesSpread) || 140;
   const mode = canvas.dataset.particlesMode || 'field';
@@ -57,11 +58,16 @@ function mountParticles(canvas) {
   };
 
   const resize = () => {
-    width = canvas.clientWidth;
-    height = canvas.clientHeight;
+    const hostRect = host.getBoundingClientRect();
+    width = Math.max(1, Math.round(hostRect.width || host.clientWidth || window.innerWidth));
+    height = Math.max(1, Math.round(hostRect.height || host.clientHeight || window.innerHeight));
+
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.max(1, Math.floor(width * dpr));
-    canvas.height = Math.max(1, Math.floor(height * dpr));
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     resolveOrigin();
   };
@@ -157,9 +163,21 @@ function mountParticles(canvas) {
   init();
   draw();
 
-  window.addEventListener('resize', () => {
+  // Повтор после раскладки: иначе canvas может остаться 300×150 / схлопнутым
+  requestAnimationFrame(() => {
+    init();
+  });
+
+  const onResize = () => {
     cancelAnimationFrame(rafId);
     init();
     draw();
-  });
+  };
+
+  window.addEventListener('resize', onResize);
+
+  if (typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(() => onResize());
+    ro.observe(host);
+  }
 }
