@@ -1,7 +1,14 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <load src="src/partials/meta.html" />
+  <load
+    src="src/partials/meta.html"
+    title="Русский Маяк — официальный сайт музыкальной группы"
+    description="Русский Маяк — музыкальная группа, которая пишет песни о силе духа, ездит с концертами в госпитали и зону СВО, помогает военнослужащим. Слушайте музыку, следите за новостями и поддержите благотворительные сборы."
+    path="/"
+    ogtype="website"
+  />
+  <load src="src/partials/schema-musicgroup.html" />
   <link rel="stylesheet" href="/src/styles/main.scss" />
 </head>
 <body>
@@ -178,8 +185,8 @@
             <div class="card__body">
               <span class="card__meta">2025 · Альбом</span>
               <h3 class="card__title">Свет с передовой</h3>
-              <p class="card__text">Десять песен, записанных после поездок к бойцам — о надежде, доме и возвращении.</p>
-              <a class="card__link" href="/albums/svet-s-peredovoy.html">
+              <p class="card__text">Восемь песен, записанных после поездок к бойцам — о надежде, доме и возвращении.</p>
+              <a class="card__link" href="/album.html">
                 Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
               </a>
             </div>
@@ -191,7 +198,7 @@
               <span class="card__meta">2023 · Альбом</span>
               <h3 class="card__title">Домой</h3>
               <p class="card__text">Альбом, посвящённый тем, кто ждёт и тем, кто возвращается.</p>
-              <a class="card__link" href="/albums/domoy.html">
+              <a class="card__link" href="/album.html">
                 Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
               </a>
             </div>
@@ -203,7 +210,7 @@
               <span class="card__meta">2021 · Альбом</span>
               <h3 class="card__title">Позывной</h3>
               <p class="card__text">Дебютная работа группы, с которой началась дорога в госпитали и на передовую.</p>
-              <a class="card__link" href="/albums/pozyvnoy.html">
+              <a class="card__link" href="/album.html">
                 Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
               </a>
             </div>
@@ -229,40 +236,40 @@
         <div class="swiper" data-video-slider>
           <div class="swiper-wrapper">
             <div class="swiper-slide">
-              <a class="video-card" href="https://youtube.com/@russkiy_mayak" target="_blank" rel="noopener noreferrer" data-reveal>
-                <div class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></div>
-                <div class="video-card__caption">
+              <button class="video-card" type="button" data-video-trigger data-video-title="Концерт в военном госпитале" data-video-embed="https://www.youtube-nocookie.com/embed/YE7VzlLtp-4?autoplay=1&rel=0" data-reveal>
+                <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+                <span class="video-card__caption">
                   <span class="video-card__title">Концерт в военном госпитале</span>
                   <span class="video-card__meta">Документальный · 6:24</span>
-                </div>
-              </a>
+                </span>
+              </button>
             </div>
             <div class="swiper-slide">
-              <a class="video-card" href="https://youtube.com/@russkiy_mayak" target="_blank" rel="noopener noreferrer" data-reveal>
-                <div class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></div>
-                <div class="video-card__caption">
+              <button class="video-card" type="button" data-video-trigger data-video-title="Поездка в зону СВО" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0" data-reveal>
+                <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+                <span class="video-card__caption">
                   <span class="video-card__title">Поездка в зону СВО</span>
                   <span class="video-card__meta">Репортаж · 9:12</span>
-                </div>
-              </a>
+                </span>
+              </button>
             </div>
             <div class="swiper-slide">
-              <a class="video-card" href="https://youtube.com/@russkiy_mayak" target="_blank" rel="noopener noreferrer" data-reveal>
-                <div class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></div>
-                <div class="video-card__caption">
+              <button class="video-card" type="button" data-video-trigger data-video-title="Live: «Маяк» на большой сцене" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0&start=30" data-reveal>
+                <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+                <span class="video-card__caption">
                   <span class="video-card__title">Live: «Маяк» на большой сцене</span>
                   <span class="video-card__meta">Концерт · 4:50</span>
-                </div>
-              </a>
+                </span>
+              </button>
             </div>
             <div class="swiper-slide">
-              <a class="video-card" href="https://youtube.com/@russkiy_mayak" target="_blank" rel="noopener noreferrer" data-reveal>
-                <div class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></div>
-                <div class="video-card__caption">
+              <button class="video-card" type="button" data-video-trigger data-video-title="Интервью: почему мы едем на передовую" data-video-embed="https://www.youtube-nocookie.com/embed/YE7VzlLtp-4?autoplay=1&rel=0&start=45" data-reveal>
+                <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+                <span class="video-card__caption">
                   <span class="video-card__title">Интервью: почему мы едем на передовую</span>
                   <span class="video-card__meta">Интервью · 11:03</span>
-                </div>
-              </a>
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -272,9 +279,15 @@
     <!-- ================= ФОТОГАЛЕРЕЯ ================= -->
     <section class="section" id="photo" aria-labelledby="photo-title">
       <div class="container">
-        <div class="section-head">
-          <p class="eyebrow" data-reveal>Фотографии</p>
-          <h2 id="photo-title" data-reveal>Моменты, которые говорят громче слов</h2>
+        <div class="section-head section-head--split">
+          <div>
+            <p class="eyebrow" data-reveal>Фотографии</p>
+            <h2 id="photo-title" data-reveal>Моменты, которые говорят громче слов</h2>
+          </div>
+          <a class="btn btn--ghost" href="/photos.html">
+            Все фотоотчёты
+            <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
+          </a>
         </div>
 
         <div class="photo-gallery__filters" role="tablist" aria-label="Фильтр фотографий" data-gallery-filters>
@@ -335,7 +348,7 @@
               <span class="card__meta"><time datetime="2026-07-12">12 июля 2026</time> · Поездки</span>
               <h3 class="card__title">Новая поездка в госпиталь Ростова</h3>
               <p class="card__text">Мы привезли не только концерт, но и партию медицинского оборудования для реабилитации.</p>
-              <a class="card__link" href="/news/gospital-rostov.html">
+              <a class="card__link" href="/news-single.html">
                 Читать <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
               </a>
             </div>
@@ -347,7 +360,7 @@
               <span class="card__meta"><time datetime="2026-06-28">28 июня 2026</time> · Релиз</span>
               <h3 class="card__title">Вышел клип на песню «Маяк»</h3>
               <p class="card__text">Съёмки прошли в местах, где мы выступали перед военнослужащими этой весной.</p>
-              <a class="card__link" href="/news/klip-mayak.html">
+              <a class="card__link" href="/news-single.html">
                 Читать <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
               </a>
             </div>
@@ -359,7 +372,7 @@
               <span class="card__meta"><time datetime="2026-06-05">5 июня 2026</time> · Благотворительность</span>
               <h3 class="card__title">Собрали 2 млн ₽ на реабилитацию бойцов</h3>
               <p class="card__text">Благодарим каждого, кто откликнулся — отчёт о расходах уже в разделе отчётности.</p>
-              <a class="card__link" href="/news/sbor-2mln.html">
+              <a class="card__link" href="/news-single.html">
                 Читать <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
               </a>
             </div>
@@ -389,7 +402,7 @@
               <h3 class="event-row__title">Благотворительный концерт «Свет для героев»</h3>
               <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Москва, Live Arena</p>
             </div>
-            <a class="btn btn--outline btn--sm" href="/concerts/svet-dlya-geroev.html">Подробнее</a>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Подробнее</a>
           </div>
           <div class="event-row">
             <div class="event-row__date"><span class="event-row__day">27</span><span class="event-row__month">сен</span></div>
@@ -397,7 +410,7 @@
               <h3 class="event-row__title">Поездка с концертом в госпиталь Ростова</h3>
               <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Ростов-на-Дону</p>
             </div>
-            <a class="btn btn--outline btn--sm" href="/concerts/gospital-rostov-sentyabr.html">Подробнее</a>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Подробнее</a>
           </div>
           <div class="event-row">
             <div class="event-row__date"><span class="event-row__day">03</span><span class="event-row__month">окт</span></div>
@@ -405,7 +418,7 @@
               <h3 class="event-row__title">Акустический концерт «Домой»</h3>
               <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Санкт-Петербург, ДК Ленсовета</p>
             </div>
-            <a class="btn btn--outline btn--sm" href="/concerts/domoy-spb.html">Подробнее</a>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Подробнее</a>
           </div>
           <div class="event-row">
             <div class="event-row__date"><span class="event-row__day">19</span><span class="event-row__month">окт</span></div>
@@ -413,7 +426,7 @@
               <h3 class="event-row__title">Благотворительная акция сбора гуманитарной помощи</h3>
               <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Краснодар, ДК Металлург</p>
             </div>
-            <a class="btn btn--outline btn--sm" href="/concerts/gumanitarnaya-akciya.html">Подробнее</a>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Подробнее</a>
           </div>
         </div>
       </div>

@@ -20,12 +20,19 @@ export function initLenis() {
   });
   gsap.ticker.lagSmoothing(0);
 
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  const isHomePath = (pathname) => pathname === '/' || pathname.endsWith('/index.html');
+
+  document.querySelectorAll('a[href*="#"]').forEach((link) => {
     link.addEventListener('click', (event) => {
-      const targetId = link.getAttribute('href');
-      if (!targetId || targetId === '#') return;
-      const target = document.querySelector(targetId);
+      const url = new URL(link.href, window.location.href);
+      if (!url.hash) return;
+
+      const isSamePage = url.pathname === window.location.pathname || (isHomePath(url.pathname) && isHomePath(window.location.pathname));
+      if (!isSamePage) return;
+
+      const target = document.querySelector(url.hash);
       if (!target) return;
+
       event.preventDefault();
       lenis.scrollTo(target, { offset: -80 });
     });

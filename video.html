@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <load
+    src="src/partials/meta.html"
+    title="Видео — концерты, поездки и интервью группы «Русский Маяк»"
+    description="Видеогалерея группы «Русский Маяк»: концертные съёмки, поездки в госпитали и зону СВО, документальные ролики и интервью."
+    path="/video.html"
+    ogtype="website"
+  />
+  <link rel="stylesheet" href="/src/styles/main.scss" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <load src="src/partials/icons.html" />
+  <load src="src/partials/header.html" />
+
+  <main id="main">
+    <load
+      src="src/partials/page-header-2.html"
+      eyebrow="Видео"
+      title="Видеогалерея"
+      subtitle="Концерты, поездки в госпитали и зону СВО, документальные съёмки и интервью — смотрите прямо здесь, без перехода на другие сайты."
+      current="Видео"
+    />
+
+    <section class="section">
+      <div class="container">
+        <div class="listing-toolbar">
+          <div class="tag-list" role="tablist" aria-label="Фильтр по категории" data-gallery-filters>
+            <button class="tag is-active" type="button" role="tab" aria-selected="true" data-filter="all">Все видео</button>
+            <button class="tag" type="button" role="tab" aria-selected="false" data-filter="concerts">Концерты</button>
+            <button class="tag" type="button" role="tab" aria-selected="false" data-filter="trips">Поездки</button>
+            <button class="tag" type="button" role="tab" aria-selected="false" data-filter="interviews">Интервью</button>
+            <button class="tag" type="button" role="tab" aria-selected="false" data-filter="backstage">Backstage</button>
+          </div>
+          <span class="listing-count" data-count-label="видео">9 видео</span>
+        </div>
+
+        <div class="grid grid--3" data-listing="video">
+          <button class="video-card" type="button" data-category="trips" data-video-trigger data-video-title="Поездка в зону СВО" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">Поездка в зону СВО</span>
+              <span class="video-card__meta">Репортаж · 9:12</span>
+            </span>
+          </button>
+
+          <button class="video-card" type="button" data-category="trips" data-video-trigger data-video-title="Концерт в военном госпитале" data-video-embed="https://www.youtube-nocookie.com/embed/YE7VzlLtp-4?autoplay=1&rel=0">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">Концерт в военном госпитале</span>
+              <span class="video-card__meta">Документальный · 6:24</span>
+            </span>
+          </button>
+
+          <button class="video-card" type="button" data-category="concerts" data-video-trigger data-video-title="Live: «Маяк» на большой сцене" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0&start=30">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">Live: «Маяк» на большой сцене</span>
+              <span class="video-card__meta">Концерт · 4:50</span>
+            </span>
+          </button>
+
+          <button class="video-card" type="button" data-category="interviews" data-video-trigger data-video-title="Интервью: почему мы едем на передовую" data-video-embed="https://www.youtube-nocookie.com/embed/YE7VzlLtp-4?autoplay=1&rel=0&start=45">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">Интервью: почему мы едем на передовую</span>
+              <span class="video-card__meta">Интервью · 11:03</span>
+            </span>
+          </button>
+
+          <button class="video-card" type="button" data-category="concerts" data-video-trigger data-video-title="Акустический сет «Домой»" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0&start=90">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">Акустический сет «Домой»</span>
+              <span class="video-card__meta">Концерт · 5:37</span>
+            </span>
+          </button>
+
+          <button class="video-card" type="button" data-category="backstage" data-video-trigger data-video-title="За кадром: подготовка к турне" data-video-embed="https://www.youtube-nocookie.com/embed/YE7VzlLtp-4?autoplay=1&rel=0&start=20">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">За кадром: подготовка к турне</span>
+              <span class="video-card__meta">Backstage · 3:48</span>
+            </span>
+          </button>
+
+          <button class="video-card" type="button" data-category="trips" data-video-trigger data-video-title="Гуманитарный груз: как это устроено" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0&start=120">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">Гуманитарный груз: как это устроено</span>
+              <span class="video-card__meta">Репортаж · 7:15</span>
+            </span>
+          </button>
+
+          <button class="video-card" type="button" data-category="interviews" data-video-trigger data-video-title="Разговор с бойцом после госпиталя" data-video-embed="https://www.youtube-nocookie.com/embed/YE7VzlLtp-4?autoplay=1&rel=0&start=60">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">Разговор с бойцом после госпиталя</span>
+              <span class="video-card__meta">Интервью · 8:41</span>
+            </span>
+          </button>
+
+          <button class="video-card" type="button" data-category="backstage" data-video-trigger data-video-title="Студийная запись альбома «Свет с передовой»" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0&start=150">
+            <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+            <span class="video-card__caption">
+              <span class="video-card__title">Студийная запись альбома «Свет с передовой»</span>
+              <span class="video-card__meta">Backstage · 5:02</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <load src="src/partials/footer.html" />
+
+  <script type="module" src="/src/scripts/pages/video.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <load
+    src="src/partials/meta.html"
+    title="Концерты и афиша — Русский Маяк"
+    description="Афиша концертов группы «Русский Маяк»: благотворительные выступления, поездки с концертами в госпитали и зону СВО, акустические вечера."
+    path="/concerts.html"
+    ogtype="website"
+  />
+  <link rel="stylesheet" href="/src/styles/main.scss" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <load src="src/partials/icons.html" />
+  <load src="src/partials/header.html" />
+
+  <main id="main">
+    <load
+      src="src/partials/page-header-2.html"
+      eyebrow="Афиша"
+      title="Концерты"
+      subtitle="Большие сцены, благотворительные вечера и выступления в госпиталях — вся афиша «Русского Маяка» в одном месте."
+      current="Концерты"
+    />
+
+    <section class="section">
+      <div class="container">
+        <div class="listing-toolbar">
+          <div class="tag-list" role="tablist" aria-label="Фильтр по статусу" data-gallery-filters>
+            <button class="tag is-active" type="button" role="tab" aria-selected="true" data-filter="all">Все</button>
+            <button class="tag" type="button" role="tab" aria-selected="false" data-filter="upcoming">Ближайшие</button>
+            <button class="tag" type="button" role="tab" aria-selected="false" data-filter="past">Прошедшие</button>
+          </div>
+          <span class="listing-count" data-count-label="мероприятий">6 мероприятий</span>
+        </div>
+
+        <div class="events-list" data-listing="concerts">
+          <div class="event-row" data-category="upcoming">
+            <div class="event-row__date"><span class="event-row__day">14</span><span class="event-row__month">сен</span></div>
+            <div>
+              <span class="badge badge--gold" style="margin-bottom: var(--space-2)">Благотворительный</span>
+              <h2 class="event-row__title">Концерт «Свет для героев»</h2>
+              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Москва, Live Arena</p>
+            </div>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Подробнее</a>
+          </div>
+
+          <div class="event-row" data-category="upcoming">
+            <div class="event-row__date"><span class="event-row__day">27</span><span class="event-row__month">сен</span></div>
+            <div>
+              <span class="badge" style="margin-bottom: var(--space-2)">Поездка</span>
+              <h2 class="event-row__title">Концерт в госпитале Ростова</h2>
+              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Ростов-на-Дону</p>
+            </div>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Подробнее</a>
+          </div>
+
+          <div class="event-row" data-category="upcoming">
+            <div class="event-row__date"><span class="event-row__day">03</span><span class="event-row__month">окт</span></div>
+            <div>
+              <span class="badge" style="margin-bottom: var(--space-2)">Акустика</span>
+              <h2 class="event-row__title">Акустический концерт «Домой»</h2>
+              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Санкт-Петербург, ДК Ленсовета</p>
+            </div>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Подробнее</a>
+          </div>
+
+          <div class="event-row" data-category="upcoming">
+            <div class="event-row__date"><span class="event-row__day">19</span><span class="event-row__month">окт</span></div>
+            <div>
+              <span class="badge badge--gold" style="margin-bottom: var(--space-2)">Благотворительный</span>
+              <h2 class="event-row__title">Акция сбора гуманитарной помощи</h2>
+              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Краснодар, ДК Металлург</p>
+            </div>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Подробнее</a>
+          </div>
+
+          <div class="event-row" data-category="past">
+            <div class="event-row__date"><span class="event-row__day">14</span><span class="event-row__month">июн</span></div>
+            <div>
+              <span class="badge" style="margin-bottom: var(--space-2)">Прошло</span>
+              <h2 class="event-row__title">Концерт «Свет для героев» в Москве (2026)</h2>
+              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Москва, Live Arena</p>
+            </div>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Отчёт</a>
+          </div>
+
+          <div class="event-row" data-category="past">
+            <div class="event-row__date"><span class="event-row__day">08</span><span class="event-row__month">май</span></div>
+            <div>
+              <span class="badge" style="margin-bottom: var(--space-2)">Прошло</span>
+              <h2 class="event-row__title">Встреча с бойцами на передовой</h2>
+              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Зона СВО</p>
+            </div>
+            <a class="btn btn--outline btn--sm" href="/concert-single.html">Отчёт</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <load src="src/partials/footer.html" />
+
+  <script type="module" src="/src/scripts/pages/concerts.js"></script>
+</body>
+</html>

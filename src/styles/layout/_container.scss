@@ -18,6 +18,10 @@
   &--surface {
     background: var(--gradient-surface);
   }
+
+  &--top-offset {
+    padding-top: calc(var(--space-11) + var(--space-4));
+  }
 }
 
 .section-head {

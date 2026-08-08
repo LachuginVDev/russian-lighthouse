@@ -223,11 +223,14 @@
 
 // ============ Video gallery ============
 .video-card {
+  display: block;
+  width: 100%;
   position: relative;
   aspect-ratio: 16 / 10;
   border-radius: var(--radius-md);
   overflow: clip;
   border: 1px solid var(--color-border);
+  text-align: left;
   background: linear-gradient(160deg, #1a1420 0%, #0c0e14 70%);
 
   &__play {
