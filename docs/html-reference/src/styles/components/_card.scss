@@ -1,0 +1,100 @@
+@use '../tokens' as *;
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  overflow: clip;
+  transition: transform var(--dur-base) var(--ease-out-expo), border-color var(--dur-base) var(--ease-out-expo), box-shadow var(--dur-base) var(--ease-out-expo);
+
+  &:hover,
+  &:focus-within {
+    transform: translateY(-6px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  &__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: clip;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--dur-slow) var(--ease-out-expo);
+    }
+  }
+
+  &:hover &__media img {
+    transform: scale(1.06);
+  }
+
+  &__media--placeholder {
+    display: grid;
+    place-items: center;
+    background: var(--ph-gradient, linear-gradient(155deg, #1c2130, #0c0e14));
+    color: var(--color-text-dim);
+
+    svg {
+      width: 32px;
+      height: 32px;
+      opacity: 0.6;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    flex: 1;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--fs-caption);
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    line-height: var(--lh-heading);
+  }
+
+  &__text {
+    color: var(--color-text-muted);
+    font-size: var(--fs-small);
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: auto;
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--color-gold-light);
+
+    svg {
+      width: 14px;
+      height: 14px;
+      transition: transform var(--dur-fast) var(--ease-out-expo);
+    }
+
+    &:hover svg,
+    &:focus-visible svg {
+      transform: translateX(4px);
+    }
+  }
+}

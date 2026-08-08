@@ -1,0 +1,42 @@
+@use '../tokens' as *;
+
+.album-hero {
+  display: grid;
+  gap: var(--space-8);
+  margin-bottom: var(--space-9);
+
+  @include lg {
+    grid-template-columns: 340px 1fr;
+    align-items: center;
+  }
+
+  &__cover {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(155deg, #1c2333 0%, #0b0d12 70%);
+    border: 1px solid var(--color-border-strong);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+    color: var(--color-text-dim);
+    font-size: var(--fs-small);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+}
+
+.album-body {
+  max-width: 68ch;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-9);
+}

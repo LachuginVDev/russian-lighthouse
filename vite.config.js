@@ -1,17 +1,30 @@
 import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
 import { resolve } from 'node:path';
-import injectHTML from 'vite-plugin-html-inject';
-
-const root = import.meta.dirname;
 
 export default defineConfig({
-  root: '.',
-  publicDir: 'public',
-  plugins: [injectHTML()],
+  plugins: [
+    laravel({
+      input: [
+        'resources/scss/main.scss',
+        'resources/js/main.js',
+        'resources/js/pages/albums.js',
+        'resources/js/pages/album.js',
+        'resources/js/pages/video.js',
+        'resources/js/pages/photos.js',
+        'resources/js/pages/photo-report.js',
+        'resources/js/pages/news.js',
+        'resources/js/pages/news-single.js',
+        'resources/js/pages/concerts.js',
+        'resources/js/pages/concert-single.js',
+        'resources/js/pages/static.js',
+      ],
+      refresh: true,
+    }),
+  ],
   resolve: {
     alias: {
-      '@': resolve(root, 'src'),
-      '@partials': resolve(root, 'src/partials'),
+      '@': resolve('resources/js'),
     },
   },
   css: {
@@ -21,26 +34,9 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    target: 'es2020',
-    cssCodeSplit: true,
-    rollupOptions: {
-      input: {
-        main: resolve(root, 'index.html'),
-        albums: resolve(root, 'albums.html'),
-        album: resolve(root, 'album.html'),
-        video: resolve(root, 'video.html'),
-        photos: resolve(root, 'photos.html'),
-        photoReport: resolve(root, 'photo-report.html'),
-        news: resolve(root, 'news.html'),
-        newsSingle: resolve(root, 'news-single.html'),
-        concerts: resolve(root, 'concerts.html'),
-        concertSingle: resolve(root, 'concert-single.html'),
-      },
-    },
-  },
   server: {
-    port: 5173,
-    open: true,
+    watch: {
+      ignored: ['**/storage/framework/views/**'],
+    },
   },
 });

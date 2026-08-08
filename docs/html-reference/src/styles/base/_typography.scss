@@ -1,0 +1,63 @@
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-display);
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+}
+
+h2 {
+  font-size: var(--fs-h2);
+}
+
+h3 {
+  font-size: var(--fs-h3);
+}
+
+h4 {
+  font-size: var(--fs-h4);
+}
+
+p {
+  max-width: 62ch;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-gold-light);
+
+  &::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--gradient-accent);
+  }
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  color: var(--color-text-muted);
+  max-width: 48ch;
+}
+
+.text-gradient {
+  background: var(--gradient-accent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

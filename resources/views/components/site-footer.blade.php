@@ -1,0 +1,66 @@
+<footer class="footer" id="footer">
+  <h2 class="visually-hidden">Информация в подвале сайта</h2>
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a class="footer__logo" href="{{ route('home') }}#top" aria-label="Русский Маяк — на главную">
+          <span class="footer__logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><use href="#icon-beacon" /></svg>
+          </span>
+          Русский Маяк
+        </a>
+        <p class="footer__desc">
+          Музыка, которая светит во тьме. Концерты, поездки в госпитали и зону СВО, поддержка тех, кто защищает страну.
+        </p>
+        <div class="footer__social">
+          <a class="footer__social-link" href="https://vk.com/russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Группа во ВКонтакте">
+            <svg aria-hidden="true"><use href="#icon-vk" /></svg>
+          </a>
+          <a class="footer__social-link" href="https://t.me/russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Канал в Telegram">
+            <svg aria-hidden="true"><use href="#icon-telegram" /></svg>
+          </a>
+          <a class="footer__social-link" href="https://youtube.com/@russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Канал на YouTube">
+            <svg aria-hidden="true"><use href="#icon-youtube" /></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="footer__heading">Разделы</h3>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="{{ route('home') }}#about">О группе</a></li>
+          <li><a class="footer__link" href="{{ route('albums.index') }}">Дискография</a></li>
+          <li><a class="footer__link" href="{{ route('videos.index') }}">Видео</a></li>
+          <li><a class="footer__link" href="{{ route('photos.index') }}">Фотогалерея</a></li>
+          <li><a class="footer__link" href="{{ route('news.index') }}">Новости</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer__heading">Поддержка</h3>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="{{ route('home') }}#fundraising">Благотворительные сборы</a></li>
+          <li><a class="footer__link" href="{{ route('home') }}#requisites">Реквизиты</a></li>
+          <li><a class="footer__link" href="{{ route('concerts.index') }}">Афиша выступлений</a></li>
+          <li><a class="footer__link" href="{{ route('home') }}#partners">Партнёры</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer__heading">Контакты</h3>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="tel:+79990000000">+7 (999) 000-00-00</a></li>
+          <li><a class="footer__link" href="mailto:info@russkiy-mayak.ru">info@russkiy-mayak.ru</a></li>
+          <li><a class="footer__link" href="{{ route('home') }}#contacts">Форма обратной связи</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© <span data-current-year>2026</span> Русский Маяк. Все права защищены.</p>
+      <div class="footer__bottom-links">
+        <a class="footer__link" href="{{ route('pages.privacy') }}">Политика конфиденциальности</a>
+      </div>
+    </div>
+  </div>
+</footer>

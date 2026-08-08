@@ -1,0 +1,25 @@
+@use '../tokens' as *;
+
+.page-header {
+  position: relative;
+  padding-block: calc(var(--space-11) + var(--space-4)) var(--space-8);
+  overflow: clip;
+  isolation: isolate;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(90% 70% at 30% 0%, rgba(31, 77, 140, 0.28), transparent 60%),
+      linear-gradient(165deg, #11151d 0%, #0a0c10 60%, #0a0c10 100%);
+  }
+
+  &__title {
+    font-size: var(--fs-h1);
+    max-width: 24ch;
+  }
+
+  &__subtitle {
+    margin-top: var(--space-4);
+  }
+}
