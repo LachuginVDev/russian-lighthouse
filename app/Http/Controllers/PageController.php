@@ -93,7 +93,14 @@ class PageController extends Controller
     {
         $item = News::query()->published()->where('slug', $slug)->with(['tags', 'embeddedTrack'])->firstOrFail();
 
-        return view('pages.news.show', compact('item'));
+        $related = News::query()
+            ->published()
+            ->where('id', '!=', $item->id)
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
+
+        return view('pages.news.show', compact('item', 'related'));
     }
 
     public function concertsIndex(): View
