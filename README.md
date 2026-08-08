@@ -96,13 +96,23 @@ docker exec russkiy-mayak-laravel.test-1 npm run build
 
 ### Открыть сайт
 
+Предпочтительно **http://127.0.0.1** (на Windows `localhost` иногда уходит в другой процесс на IPv6).
+
 | Сервис | URL |
 |---|---|
-| Сайт | http://localhost |
-| Админка | http://localhost/admin (`admin@russkiy-mayak.test` / `password`) |
-| Vite HMR (dev) | http://localhost:5173 |
-| Mailpit (почта) | http://localhost:8025 |
-| PostgreSQL | `localhost:5432` (user/pass: `sail` / `password`, db: `russkiy_mayak`) |
+| Сайт | http://127.0.0.1 |
+| Админка | http://127.0.0.1/admin (`admin@russkiy-mayak.test` / `password`) |
+| Vite HMR (dev) | http://127.0.0.1:5173 |
+| Mailpit (почта) | http://127.0.0.1:8025 |
+| PostgreSQL | `127.0.0.1:5432` (user/pass: `sail` / `password`, db: `russkiy_mayak`) |
+
+Если `vendor\bin\sail` на Windows падает — поднимайте так:
+
+```powershell
+docker compose up -d
+```
+
+**Windows + проект на диске D:** первый ответ может быть медленным из‑за bind-mount. Держите `SAIL_XDEBUG_MODE=off` в `.env`. Для быстрой разработки лучше клонировать репозиторий в файловую систему WSL (`\\wsl$\...`).
 
 ---
 
