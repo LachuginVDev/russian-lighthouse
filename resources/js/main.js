@@ -1,6 +1,5 @@
 import { initCommon } from './core/common.js';
 import { initHeroEntrance, initHeroParallax } from './components/hero.js';
-import { initParticles } from './components/particles.js';
 import { initSplitText } from './components/splitText.js';
 import { initCounters } from './components/counter.js';
 import { initPlayer } from './components/player.js';
@@ -15,7 +14,6 @@ function init() {
   initSplitText();
   initHeroEntrance();
   initHeroParallax();
-  initParticles();
   initCounters();
   initPlayer();
   initVideoSlider();

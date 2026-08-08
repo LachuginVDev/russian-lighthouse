@@ -60,20 +60,47 @@
     pointer-events: none;
   }
 
+  &__glow {
+    position: absolute;
+    right: -8%;
+    top: 8%;
+    width: min(78vw, 720px);
+    aspect-ratio: 1;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(230, 198, 124, 0.38) 0%,
+      rgba(230, 198, 124, 0.16) 28%,
+      rgba(230, 198, 124, 0.06) 52%,
+      transparent 72%
+    );
+    filter: blur(4px);
+    opacity: 0;
+    transform-origin: center;
+
+    @include lg {
+      right: 2%;
+      top: 4%;
+      width: min(56vw, 820px);
+    }
+
+    &.is-lit {
+      animation: hero-beacon-pulse 4.2s var(--ease-smooth) infinite;
+    }
+  }
+
   &__inner {
     position: relative;
     z-index: 1;
     width: 100%;
-    display: grid;
-    align-items: end;
-    gap: var(--space-8);
     padding-block: calc(var(--space-11) + var(--space-6)) var(--space-9);
 
     @include lg {
-      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
-      align-items: center;
-      gap: var(--space-9);
       min-height: calc(100vh - 6rem);
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -81,77 +108,6 @@
     position: relative;
     z-index: 2;
     max-width: 40rem;
-  }
-
-  &__visual {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    min-height: 220px;
-    pointer-events: none;
-
-    @include lg {
-      min-height: 420px;
-      justify-self: end;
-      width: min(100%, 420px);
-    }
-  }
-
-  &__beacon {
-    position: relative;
-    width: min(68vw, 260px);
-    aspect-ratio: 200 / 340;
-    color: var(--color-gold-light);
-
-    @include lg {
-      width: min(100%, 320px);
-    }
-  }
-
-  &__beacon-glow {
-    position: absolute;
-    left: 50%;
-    top: 8%;
-    width: 42%;
-    aspect-ratio: 1;
-    transform: translate(-50%, -20%);
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(230, 198, 124, 0.45) 0%, rgba(230, 198, 124, 0.12) 42%, transparent 70%);
-    opacity: 0;
-    pointer-events: none;
-    filter: blur(2px);
-  }
-
-  &__beacon.is-lit &__beacon-glow {
-    opacity: 1;
-    animation: hero-beacon-pulse 3.6s var(--ease-smooth) infinite;
-  }
-
-  &__beacon-svg {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: auto;
-    display: block;
-    overflow: visible;
-  }
-
-  &__beacon-stroke {
-    opacity: 0.92;
-  }
-
-  &__beacon-ray {
-    opacity: 0.55;
-  }
-
-  &__beacon-origin {
-    opacity: 0;
-    filter: drop-shadow(0 0 8px rgba(255, 231, 168, 0.9));
-  }
-
-  &__beacon.is-lit &__beacon-origin {
-    opacity: 1;
   }
 
   &__eyebrow {
@@ -205,8 +161,8 @@
 
 @keyframes hero-beacon-pulse {
   0%,
-  100% { opacity: 0.55; transform: translate(-50%, -20%) scale(0.92); }
-  50% { opacity: 1; transform: translate(-50%, -20%) scale(1.08); }
+  100% { opacity: 0.72; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1.06); }
 }
 
 // ============ About ============

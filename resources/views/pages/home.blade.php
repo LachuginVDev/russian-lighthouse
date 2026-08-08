@@ -26,6 +26,7 @@
         data-particles-count="64"
       ></canvas>
       <div class="hero__overlay" aria-hidden="true"></div>
+      <div class="hero__glow" aria-hidden="true" data-hero-glow></div>
 
       <div class="container hero__inner">
         <div class="hero__content">
@@ -40,32 +41,6 @@
               Слушать музыку
             </a>
             <a class="btn btn--outline" href="#fundraising">Поддержать сбор</a>
-          </div>
-        </div>
-
-        <div class="hero__visual" aria-hidden="true">
-          <div class="hero__beacon" data-hero-beacon>
-            <span class="hero__beacon-glow" data-hero-beacon-glow></span>
-            <svg class="hero__beacon-svg" viewBox="0 0 200 340" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {{-- Одноцветный контур: рисуется при загрузке --}}
-              <g class="hero__beacon-strokes" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none">
-                <path class="hero__beacon-stroke" data-draw data-draw-order="1" stroke-width="1.6" d="M36 312 H164" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="2" stroke-width="1.6" d="M52 312 L70 168 H130 L148 312" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="3" stroke-width="1.4" d="M78 236 H122" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="4" stroke-width="1.4" d="M74 200 H126" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="5" stroke-width="1.5" d="M88 168 V148 H112 V168" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="6" stroke-width="1.5" d="M64 148 H136" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="7" stroke-width="1.5" d="M76 148 V110 H124 V148" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="8" stroke-width="1.4" d="M92 110 V148 M108 110 V148" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="9" stroke-width="1.6" d="M70 110 L100 78 L130 110" />
-                <path class="hero__beacon-stroke" data-draw data-draw-order="10" stroke-width="1.5" d="M100 78 V58" />
-                <circle class="hero__beacon-stroke" data-draw data-draw-order="11" stroke-width="1.5" cx="100" cy="52" r="6" />
-                <path class="hero__beacon-stroke hero__beacon-ray" data-draw data-draw-order="12" stroke-width="1.2" d="M100 46 L72 22" />
-                <path class="hero__beacon-stroke hero__beacon-ray" data-draw data-draw-order="13" stroke-width="1.2" d="M100 46 L100 14" />
-                <path class="hero__beacon-stroke hero__beacon-ray" data-draw data-draw-order="14" stroke-width="1.2" d="M100 46 L128 22" />
-              </g>
-              <circle class="hero__beacon-origin" data-hero-beacon-origin cx="100" cy="52" r="3" fill="currentColor" />
-            </svg>
           </div>
         </div>
       </div>

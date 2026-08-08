@@ -1,17 +1,34 @@
 import { prefersReducedMotion } from '../core/gsap.js';
 
 /**
- * Частицы на canvas [data-particles].
- * mode:
- *  - field — по всему блоку (hero)
- *  - emit  — выброс вверх от data-particles-origin
+ * Частицы:
+ * - готовые [data-particles]
+ * - тёмные .hero и .section:not(.section--muted) — canvas добавляется сам
  */
 export function initParticles() {
   if (prefersReducedMotion) return;
 
+  ensureSectionCanvases();
+
   document.querySelectorAll('[data-particles]').forEach((canvas) => {
     mountParticles(canvas);
   });
+}
+
+function ensureSectionCanvases() {
+  document
+    .querySelectorAll('.hero, .section:not(.section--muted)')
+    .forEach((section) => {
+      if (section.querySelector('[data-particles]')) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.className = 'section-particles';
+      canvas.setAttribute('aria-hidden', 'true');
+      canvas.dataset.particles = '';
+      canvas.dataset.particlesMode = 'field';
+      canvas.dataset.particlesCount = section.classList.contains('hero') ? '64' : '40';
+      section.prepend(canvas);
+    });
 }
 
 function mountParticles(canvas) {
@@ -20,7 +37,8 @@ function mountParticles(canvas) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  const host = canvas.closest('.hero') || canvas.parentElement || canvas;
+  const host =
+    canvas.closest('.hero, .section') || canvas.parentElement || canvas;
   const count = Number(canvas.dataset.particlesCount) || 48;
   const spread = Number(canvas.dataset.particlesSpread) || 140;
   const mode = canvas.dataset.particlesMode || 'field';
@@ -163,10 +181,7 @@ function mountParticles(canvas) {
   init();
   draw();
 
-  // Повтор после раскладки: иначе canvas может остаться 300×150 / схлопнутым
-  requestAnimationFrame(() => {
-    init();
-  });
+  requestAnimationFrame(() => init());
 
   const onResize = () => {
     cancelAnimationFrame(rafId);
