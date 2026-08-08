@@ -661,15 +661,17 @@ GET /manifest.webmanifest   # опционально
 
 ## 13. Этапы внедрения
 
-### Этап A — Каркас (Docker + Laravel)
+### Этап A — Каркас (Docker + Laravel) ✅
 
-1. Создать Laravel 13-проект в репозитории (монолит рядом/вместо static-root по стратегии переноса).  
-2. Docker Compose / Sail: nginx, php 8.3+, pgsql, redis, mailpit, node.  
-3. Подключить Vite, перенести SCSS/JS/шрифты.  
-4. Собрать `layouts/app` + компоненты header/footer/meta/icons из partials.  
-5. Статические Blade-страницы с текущим HTML (контент пока из массивов/seed) — **пиксельное совпадение**.  
+Статус: **выполнено** (ветка `feature/laravel-bootstrap`). Инструкция запуска: [`README.md`](../README.md), чеклист: [`STAGE_A.md`](STAGE_A.md).
 
-**Критерий готовности:** все 10 страниц открываются через Laravel, анимации работают.
+1. ✅ Laravel 13 в корне репозитория; утверждённая HTML-вёрстка — в `docs/html-reference/`.  
+2. ✅ Sail / Compose: app, pgsql, redis, mailpit (+ Vite).  
+3. ✅ Vite: SCSS/JS/шрифты в `resources/scss`, `resources/js`.  
+4. ✅ `layouts/app` + компоненты header/footer/meta/icons/page-header/schema.  
+5. ✅ Blade-страницы всех экранов + `/privacy`, `/reports`; ЧПУ и 301 со старых `*.html`.  
+
+**Критерий готовности:** все 10 страниц открываются через Laravel, анимации работают — **закрыт**.
 
 ### Этап B — Домен и админка
 
