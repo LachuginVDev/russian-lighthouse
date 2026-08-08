@@ -24,6 +24,7 @@ class SiteSetting extends Model
         'stat_concerts',
         'stat_trips',
         'default_og_image',
+        'is_development_mode',
         'card_number',
         'recipient',
         'inn',
@@ -32,8 +33,15 @@ class SiteSetting extends Model
         'qr_image_path',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'is_development_mode' => 'boolean',
+        ];
+    }
+
     public static function current(): self
     {
-        return static::query()->firstOrCreate([]);
+        return once(fn () => static::query()->firstOrCreate([]));
     }
 }

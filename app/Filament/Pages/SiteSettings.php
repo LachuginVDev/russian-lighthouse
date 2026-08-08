@@ -9,6 +9,8 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Illuminate\Support\Facades\Cache;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
@@ -162,6 +164,13 @@ class SiteSettings extends Page
                             ]),
                         Tab::make('SEO / OG')
                             ->schema([
+                                Section::make('Индексация')
+                                    ->schema([
+                                        Toggle::make('is_development_mode')
+                                            ->label('Режим разработки')
+                                            ->helperText('Если включён: robots noindex, Disallow в robots.txt, пустой sitemap. Выключите перед продакшеном.')
+                                            ->default(true),
+                                    ]),
                                 FileUpload::make('default_og_image')
                                     ->label('OG-изображение по умолчанию')
                                     ->image()
@@ -204,6 +213,8 @@ class SiteSettings extends Page
         $record = $this->getRecord();
         $record->fill($data);
         $record->save();
+
+        Cache::forget('seo.sitemap.xml');
 
         Notification::make()
             ->success()

@@ -12,9 +12,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
         ]);
 
-        // Мок-контент только для разработки и автотестов
-        if (app()->environment(['local', 'testing'])) {
-            $this->call(DemoContentSeeder::class);
-        }
+        // DemoContentSeeder не вызывается автоматически — только вручную для локальных тестов:
+        // php artisan db:seed --class=DemoContentSeeder
     }
 }

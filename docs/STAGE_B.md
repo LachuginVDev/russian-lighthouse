@@ -8,7 +8,7 @@
 1. Миграции и Eloquent-модели сущностей (альбомы, треки, видео, фоторепортажи, новости, концерты, сборы, партнёры, страницы, отчёты, обращения, настройки).
 2. Filament 5 админка: `/admin` — CRUD разделов + singleton «Настройки сайта».
 3. Публичные listing/detail читают данные из PostgreSQL.
-4. Мок-контент **только для local/testing** (`DemoContentSeeder`). В production не вызывается.
+4. Мок-контент (`DemoContentSeeder`) — только вручную / в тестах, не в дефолтном seed.
 5. Тест `tests/Feature/StageBContentTest.php` (sqlite in-memory + демо-сид).
 
 ## Админка
@@ -41,7 +41,7 @@ vendor/bin/sail artisan db:seed --class=DemoContentSeeder
 | Миграции сущностей | да |
 | Контент разделов из БД | да |
 | Редактирование в `/admin` | да |
-| Моки только для тестов/local | да |
+| Моки только вручную / в тестах | да |
 | privacy / reports из CMS | да |
 
 ## Не входит (этап C+)

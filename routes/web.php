@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SeoController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('seo.robots');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('seo.sitemap');
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 
@@ -22,16 +26,16 @@ Route::get('/concerts/{slug}', [PageController::class, 'concertsShow'])->name('c
 Route::get('/privacy', [PageController::class, 'privacy'])->name('pages.privacy');
 Route::get('/reports', [PageController::class, 'reports'])->name('pages.reports');
 
-// Совместимость со старыми .html URL из утверждённой вёрстки
+// Совместимость со старыми .html URL — на листинги, без демо-slug
 Route::redirect('/index.html', '/', 301);
 Route::redirect('/albums.html', '/albums', 301);
-Route::redirect('/album.html', '/albums/svet-s-peredovoy', 301);
+Route::redirect('/album.html', '/albums', 301);
 Route::redirect('/video.html', '/video', 301);
 Route::redirect('/photos.html', '/photos', 301);
-Route::redirect('/photo-report.html', '/photos/gumanitarnyy-konvoy', 301);
+Route::redirect('/photo-report.html', '/photos', 301);
 Route::redirect('/news.html', '/news', 301);
-Route::redirect('/news-single.html', '/news/gospital-rostov', 301);
+Route::redirect('/news-single.html', '/news', 301);
 Route::redirect('/concerts.html', '/concerts', 301);
-Route::redirect('/concert-single.html', '/concerts/svet-dlya-geroev', 301);
+Route::redirect('/concert-single.html', '/concerts', 301);
 Route::redirect('/privacy.html', '/privacy', 301);
 Route::redirect('/reports.html', '/reports', 301);

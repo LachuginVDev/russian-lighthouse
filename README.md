@@ -3,7 +3,7 @@
 Laravel 13 · PostgreSQL · Docker Desktop (Sail) · Vite · утверждённая вёрстка на Blade.
 
 Полный технический план: [`docs/LARAVEL_INTEGRATION_PLAN.md`](docs/LARAVEL_INTEGRATION_PLAN.md)  
-Этап A: [`docs/STAGE_A.md`](docs/STAGE_A.md) · этап B: [`docs/STAGE_B.md`](docs/STAGE_B.md)
+Этапы: [`STAGE_A`](docs/STAGE_A.md) · [`STAGE_B`](docs/STAGE_B.md) · [`STAGE_C`](docs/STAGE_C.md) · [`STAGE_D`](docs/STAGE_D.md)
 
 ---
 
@@ -36,7 +36,9 @@ php artisan key:generate
 ./vendor/bin/sail npm run build
 ```
 
-`--seed` в `local` подтянет мок-контент и админа. В production демо-сид не выполняется.
+`--seed` создаёт только админа. Мок-контент (опционально, local):  
+`php artisan db:seed --class=DemoContentSeeder`.  
+Перед продом в `/admin/site-settings` выключите **Режим разработки** (иначе сайт с noindex).
 
 На Windows в PowerShell вместо `./vendor/bin/sail` можно:
 

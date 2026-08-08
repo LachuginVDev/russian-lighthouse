@@ -685,24 +685,29 @@ GET /manifest.webmanifest   # опционально
 
 **Критерий:** контент главной и разделов редактируется из `/admin` — **закрыт**.
 
-### Этап C — API
+### Этап C — API ✅
 
-1. API v1 Resources + маршруты.  
-2. `POST /contact` + уведомление на email.  
-3. Load more / фильтры listing через API (по желанию) или server query.  
-4. Обновить JS формы на `fetch`.  
+Статус: **выполнено**. Чеклист: [`STAGE_C.md`](STAGE_C.md).
 
-**Критерий:** форма и ключевые виджеты работают через API; Postman/OpenAPI описание есть.
+1. ✅ API v1 Resources + маршруты `/api/v1/*`.  
+2. ✅ `POST /api/v1/contact` + уведомление на email (queue).  
+3. ⏳ Load more / фильтры listing через API — по желанию позже.  
+4. ✅ JS формы контактов на `fetch`.  
+5. ✅ `DemoContentSeeder` убран из дефолтного `DatabaseSeeder`.
 
-### Этап D — SEO и продакшен
+**Критерий:** форма и ключевые виджеты работают через API — **закрыт** (OpenAPI — опционально).
 
-1. Динамический sitemap/robots.  
-2. Schema JSON-LD из данных.  
-3. 301 редиректы со старых `.html`.  
-4. Кэш, очереди, `storage:link`, оптимизации изображений.  
-5. Lighthouse / Schema validation.  
+### Этап D — SEO и продакшен ✅
 
-**Критерий:** SEO-чеклист раздела 9.3 закрыт.
+Статус: **выполнено**. Чеклист: [`STAGE_D.md`](STAGE_D.md).
+
+1. ✅ Динамический sitemap/robots.  
+2. ✅ Schema JSON-LD из настроек; OG из `default_og_image`.  
+3. ✅ 301 редиректы со старых `.html` на листинги.  
+4. ✅ Режим разработки в настройках → noindex.  
+5. ⏳ Lighthouse / внешняя Schema validation — на staging после контента.  
+
+**Критерий:** SEO-контур готов; перед продом выключить режим разработки.
 
 ### Этап E — Развитие (после запуска)
 

@@ -26,8 +26,9 @@ use App\Models\Video;
 use Illuminate\Database\Seeder;
 
 /**
- * Мок-данные из утверждённой вёрстки — только для local/testing.
- * Не вызывается в production.
+ * Мок-данные из утверждённой вёрстки.
+ * Не вызывается из DatabaseSeeder — только вручную или в тестах:
+ * php artisan db:seed --class=DemoContentSeeder
  */
 class DemoContentSeeder extends Seeder
 {
