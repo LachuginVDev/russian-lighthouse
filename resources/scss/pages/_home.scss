@@ -97,26 +97,32 @@
 
   &__beacon {
     position: relative;
-    width: min(72vw, 280px);
-    aspect-ratio: 240 / 360;
+    width: min(68vw, 260px);
+    aspect-ratio: 200 / 340;
+    color: var(--color-gold-light);
 
     @include lg {
-      width: min(100%, 360px);
+      width: min(100%, 320px);
     }
   }
 
-  &__beacon-rays {
+  &__beacon-glow {
     position: absolute;
     left: 50%;
-    top: 12%;
-    width: 160%;
-    height: 55%;
-    transform: translateX(-50%);
-    background:
-      conic-gradient(from 210deg at 50% 40%, transparent 0 38%, rgba(230, 198, 124, 0.14) 42%, transparent 48%, rgba(230, 198, 124, 0.1) 54%, transparent 60% 100%);
+    top: 8%;
+    width: 42%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -20%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(230, 198, 124, 0.45) 0%, rgba(230, 198, 124, 0.12) 42%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
     filter: blur(2px);
-    opacity: 0.85;
-    animation: hero-beacon-sweep 10s var(--ease-smooth) infinite;
+  }
+
+  &__beacon.is-lit &__beacon-glow {
+    opacity: 1;
+    animation: hero-beacon-pulse 3.6s var(--ease-smooth) infinite;
   }
 
   &__beacon-svg {
@@ -125,11 +131,24 @@
     width: 100%;
     height: auto;
     display: block;
-    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.45));
+    overflow: visible;
+  }
+
+  &__beacon-stroke {
+    opacity: 0.92;
+  }
+
+  &__beacon-ray {
+    opacity: 0.55;
   }
 
   &__beacon-origin {
-    filter: drop-shadow(0 0 10px rgba(255, 231, 168, 0.85));
+    opacity: 0;
+    filter: drop-shadow(0 0 8px rgba(255, 231, 168, 0.9));
+  }
+
+  &__beacon.is-lit &__beacon-origin {
+    opacity: 1;
   }
 
   &__eyebrow {
@@ -181,10 +200,10 @@
   }
 }
 
-@keyframes hero-beacon-sweep {
+@keyframes hero-beacon-pulse {
   0%,
-  100% { opacity: 0.55; transform: translateX(-50%) rotate(-2deg); }
-  50% { opacity: 0.95; transform: translateX(-50%) rotate(3deg); }
+  100% { opacity: 0.55; transform: translate(-50%, -20%) scale(0.92); }
+  50% { opacity: 1; transform: translate(-50%, -20%) scale(1.08); }
 }
 
 // ============ About ============
