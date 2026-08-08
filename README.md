@@ -3,7 +3,7 @@
 Laravel 13 · PostgreSQL · Docker Desktop (Sail) · Vite · утверждённая вёрстка на Blade.
 
 Полный технический план: [`docs/LARAVEL_INTEGRATION_PLAN.md`](docs/LARAVEL_INTEGRATION_PLAN.md)  
-Статус этапа A: [`docs/STAGE_A.md`](docs/STAGE_A.md)
+Этап A: [`docs/STAGE_A.md`](docs/STAGE_A.md) · этап B: [`docs/STAGE_B.md`](docs/STAGE_B.md)
 
 ---
 
@@ -31,9 +31,12 @@ php artisan key:generate
 
 # 4. Зависимости фронта + миграции БД
 ./vendor/bin/sail npm install
-./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail artisan storage:link
 ./vendor/bin/sail npm run build
 ```
+
+`--seed` в `local` подтянет мок-контент и админа. В production демо-сид не выполняется.
 
 На Windows в PowerShell вместо `./vendor/bin/sail` можно:
 
@@ -96,6 +99,7 @@ docker exec russkiy-mayak-laravel.test-1 npm run build
 | Сервис | URL |
 |---|---|
 | Сайт | http://localhost |
+| Админка | http://localhost/admin (`admin@russkiy-mayak.test` / `password`) |
 | Vite HMR (dev) | http://localhost:5173 |
 | Mailpit (почта) | http://localhost:8025 |
 | PostgreSQL | `localhost:5432` (user/pass: `sail` / `password`, db: `russkiy_mayak`) |
