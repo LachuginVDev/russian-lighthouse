@@ -2,11 +2,16 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "russkiy-mayak/site",
     "type": "project",
-    "description": "Официальный сайт музыкальной группы «Русский Маяк» (Laravel 13 + PostgreSQL).",
-    "keywords": ["laravel", "russkiy-mayak", "music"],
+    "description": "\u041e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u044b\u0439 \u0441\u0430\u0439\u0442 \u043c\u0443\u0437\u044b\u043a\u0430\u043b\u044c\u043d\u043e\u0439 \u0433\u0440\u0443\u043f\u043f\u044b \u00ab\u0420\u0443\u0441\u0441\u043a\u0438\u0439 \u041c\u0430\u044f\u043a\u00bb (Laravel 13 + PostgreSQL).",
+    "keywords": [
+        "laravel",
+        "russkiy-mayak",
+        "music"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "filament/filament": "^5.0",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0"
     },
@@ -50,7 +55,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
