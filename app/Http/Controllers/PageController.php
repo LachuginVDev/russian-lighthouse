@@ -10,6 +10,7 @@ use App\Models\Fundraising;
 use App\Models\News;
 use App\Models\Page;
 use App\Models\Partner;
+use App\Models\Photo;
 use App\Models\PhotoReport;
 use App\Models\Report;
 use App\Models\SiteSetting;
@@ -23,18 +24,56 @@ class PageController extends Controller
     {
         $settings = SiteSetting::current();
 
+        $featuredPhotos = Photo::query()
+            ->where('is_featured_home', true)
+            ->with('photoReport')
+            ->orderBy('position')
+            ->limit(12)
+            ->get();
+
+        if ($featuredPhotos->isEmpty()) {
+            $featuredPhotos = Photo::query()
+                ->whereHas('photoReport', fn ($query) => $query->published()->where('is_featured_home', true))
+                ->with('photoReport')
+                ->orderBy('position')
+                ->limit(12)
+                ->get();
+        }
+
         return view('pages.home', [
             'settings' => $settings,
             'featuredTracks' => Track::query()
                 ->where('is_featured_home', true)
+                ->with('album')
                 ->orderBy('position')
                 ->limit(8)
                 ->get(),
-            'albums' => Album::query()->published()->orderBy('sort_order')->limit(6)->get(),
-            'videos' => Video::query()->published()->where('is_featured_home', true)->orderBy('sort_order')->limit(8)->get(),
-            'photoReports' => PhotoReport::query()->published()->where('is_featured_home', true)->orderBy('sort_order')->limit(6)->get(),
-            'news' => News::query()->published()->orderByDesc('published_at')->limit(3)->get(),
-            'concerts' => Concert::query()->published()->where('status', ConcertStatus::Upcoming)->orderBy('starts_at')->limit(3)->get(),
+            'albums' => Album::query()
+                ->published()
+                ->where('is_featured_home', true)
+                ->orderBy('sort_order')
+                ->limit(6)
+                ->get(),
+            'videos' => Video::query()
+                ->published()
+                ->where('is_featured_home', true)
+                ->orderBy('sort_order')
+                ->limit(8)
+                ->get(),
+            'featuredPhotos' => $featuredPhotos,
+            'news' => News::query()
+                ->published()
+                ->where('is_featured_home', true)
+                ->orderByDesc('published_at')
+                ->limit(3)
+                ->get(),
+            'concerts' => Concert::query()
+                ->published()
+                ->where('status', ConcertStatus::Upcoming)
+                ->where('is_featured_home', true)
+                ->orderBy('starts_at')
+                ->limit(4)
+                ->get(),
             'fundraising' => Fundraising::query()
                 ->where('is_featured_home', true)
                 ->where('status', FundraisingStatus::Open)

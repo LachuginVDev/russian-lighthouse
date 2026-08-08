@@ -1,3 +1,7 @@
+@php
+  $settings = $settings ?? \App\Models\SiteSetting::current();
+  $phoneHref = $settings->phone ? preg_replace('/\D+/', '', $settings->phone) : null;
+@endphp
 <footer class="footer" id="footer">
   <h2 class="visually-hidden">Информация в подвале сайта</h2>
   <div class="container">
@@ -10,18 +14,24 @@
           Русский Маяк
         </a>
         <p class="footer__desc">
-          Музыка, которая светит во тьме. Концерты, поездки в госпитали и зону СВО, поддержка тех, кто защищает страну.
+          {{ $settings->about_lead ?: 'Музыка, которая светит во тьме. Концерты, поездки в госпитали и зону СВО, поддержка тех, кто защищает страну.' }}
         </p>
         <div class="footer__social">
-          <a class="footer__social-link" href="https://vk.com/russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Группа во ВКонтакте">
-            <svg aria-hidden="true"><use href="#icon-vk" /></svg>
-          </a>
-          <a class="footer__social-link" href="https://t.me/russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Канал в Telegram">
-            <svg aria-hidden="true"><use href="#icon-telegram" /></svg>
-          </a>
-          <a class="footer__social-link" href="https://youtube.com/@russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Канал на YouTube">
-            <svg aria-hidden="true"><use href="#icon-youtube" /></svg>
-          </a>
+          @if ($settings->vk_url)
+            <a class="footer__social-link" href="{{ $settings->vk_url }}" target="_blank" rel="noopener noreferrer" aria-label="Группа во ВКонтакте">
+              <svg aria-hidden="true"><use href="#icon-vk" /></svg>
+            </a>
+          @endif
+          @if ($settings->telegram_url)
+            <a class="footer__social-link" href="{{ $settings->telegram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Канал в Telegram">
+              <svg aria-hidden="true"><use href="#icon-telegram" /></svg>
+            </a>
+          @endif
+          @if ($settings->youtube_url)
+            <a class="footer__social-link" href="{{ $settings->youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="Канал на YouTube">
+              <svg aria-hidden="true"><use href="#icon-youtube" /></svg>
+            </a>
+          @endif
         </div>
       </div>
 
@@ -49,8 +59,12 @@
       <div>
         <h3 class="footer__heading">Контакты</h3>
         <ul class="footer__list">
-          <li><a class="footer__link" href="tel:+79990000000">+7 (999) 000-00-00</a></li>
-          <li><a class="footer__link" href="mailto:info@russkiy-mayak.ru">info@russkiy-mayak.ru</a></li>
+          @if ($settings->phone)
+            <li><a class="footer__link" href="tel:{{ $phoneHref }}">{{ $settings->phone }}</a></li>
+          @endif
+          @if ($settings->email)
+            <li><a class="footer__link" href="mailto:{{ $settings->email }}">{{ $settings->email }}</a></li>
+          @endif
           <li><a class="footer__link" href="{{ route('home') }}#contacts">Форма обратной связи</a></li>
         </ul>
       </div>

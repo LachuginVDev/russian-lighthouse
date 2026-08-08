@@ -31,8 +31,13 @@
 
       <div class="grid grid--3" data-listing="photos">
         @forelse ($reports as $report)
+          @php $cover = \App\Support\MediaUrl::make($report->cover_path); @endphp
           <article class="card" data-category="{{ $report->category->value }}">
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+            @if ($cover)
+              <a class="card__media" href="{{ route('photos.show', $report) }}" style="background-image: url('{{ $cover }}')" aria-label="{{ $report->title }}"></a>
+            @else
+              <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+            @endif
             <div class="card__body">
               <span class="card__meta">{{ $report->report_date?->format('d.m.Y') }} · {{ $report->category->label() }}</span>
               <h2 class="card__title">{{ $report->title }}</h2>

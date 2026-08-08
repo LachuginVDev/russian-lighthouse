@@ -22,8 +22,13 @@
       <h2 class="section-title" style="margin-bottom: var(--space-6)">Скоро</h2>
       <div class="grid grid--3" data-listing="concerts-upcoming">
         @forelse ($upcoming as $concert)
+          @php $cover = \App\Support\MediaUrl::make($concert->cover_path); @endphp
           <article class="card">
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+            @if ($cover)
+              <a class="card__media" href="{{ route('concerts.show', $concert) }}" style="background-image: url('{{ $cover }}')" aria-label="{{ $concert->title }}"></a>
+            @else
+              <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+            @endif
             <div class="card__body">
               <span class="card__meta">
                 <span class="badge badge--gold">{{ $concert->badge_type->label() }}</span>

@@ -29,12 +29,19 @@
 
     <div class="photo-gallery" data-gallery data-reveal style="margin-top: var(--space-8)">
       @foreach ($report->photos as $photo)
+        @php $src = \App\Support\MediaUrl::make($photo->image_path); @endphp
         <button
-          class="photo-gallery__item card__media--placeholder"
+          class="photo-gallery__item {{ $src ? '' : 'card__media--placeholder' }}"
           type="button"
-          aria-label="{{ $photo->alt ?: $photo->caption }}"
+          data-category="{{ $report->category->value }}"
+          aria-label="{{ $photo->alt ?: $photo->caption ?: $report->title }}"
+          @if ($src) style="background-image: url('{{ $src }}')" @endif
         >
-          <svg aria-hidden="true"><use href="#icon-camera" /></svg>
+          @unless ($src)
+            <svg aria-hidden="true"><use href="#icon-camera" /></svg>
+          @else
+            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
+          @endunless
           @if ($photo->caption)<span class="visually-hidden">{{ $photo->caption }}</span>@endif
         </button>
       @endforeach

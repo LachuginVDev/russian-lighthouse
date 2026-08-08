@@ -98,15 +98,20 @@
 
           <div class="player__list" role="list" aria-label="Треклист альбома" data-player-list>
             @foreach ($album->tracks as $index => $track)
+              @php
+                $trackSrc = \App\Support\MediaUrl::make($track->audio_path);
+                $trackCover = \App\Support\MediaUrl::make($track->cover_path ?: $album->cover_path);
+              @endphp
               <button
                 class="player__track @if($index === 0) is-active @endif"
                 type="button"
                 role="listitem"
                 data-track
-                data-src="{{ $track->audio_path }}"
+                data-src="{{ $trackSrc }}"
                 data-title="{{ $track->title }}"
                 data-artist="{{ $track->artist }}"
                 data-duration="{{ $track->duration }}"
+                data-cover="{{ $trackCover }}"
               >
                 <span class="player__track-index">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
                 <span class="player__track-name"><strong>{{ $track->title }}</strong><span>{{ $album->title }}</span></span>

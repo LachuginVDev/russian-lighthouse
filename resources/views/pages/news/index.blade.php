@@ -31,12 +31,19 @@
 
       <div class="grid grid--3" data-listing="news">
         @forelse ($news as $item)
+          @php $cover = \App\Support\MediaUrl::make($item->cover_path); @endphp
           <article class="card" data-category="{{ $item->category->value }}">
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+            @if ($cover)
+              <a class="card__media" href="{{ route('news.show', $item) }}" style="background-image: url('{{ $cover }}')" aria-label="{{ $item->title }}"></a>
+            @else
+              <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+            @endif
             <div class="card__body">
               <span class="card__meta">{{ $item->published_at?->format('d.m.Y') }} · {{ $item->category->label() }}</span>
               <h2 class="card__title">{{ $item->title }}</h2>
-              <p class="card__text">{{ $item->excerpt }}</p>
+              @if ($item->excerpt)
+                <p class="card__text">{{ $item->excerpt }}</p>
+              @endif
               <a class="card__link" href="{{ route('news.show', $item) }}">Читать <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg></a>
             </div>
           </article>

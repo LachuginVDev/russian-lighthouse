@@ -56,7 +56,10 @@
     aspect-ratio: 16 / 8;
     border-radius: var(--radius-lg);
     margin-bottom: var(--space-8);
-    background: linear-gradient(160deg, #1c2333 0%, #0b0d12 70%);
+    background-color: #12151c;
+    background-image: linear-gradient(160deg, #1c2333 0%, #0b0d12 70%);
+    background-size: cover;
+    background-position: center;
     border: 1px solid var(--color-border);
   }
 

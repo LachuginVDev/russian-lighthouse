@@ -2,8 +2,6 @@
 
 namespace App\Support;
 
-use Illuminate\Support\Facades\Storage;
-
 final class MediaUrl
 {
     public static function make(?string $path): ?string
@@ -17,9 +15,10 @@ final class MediaUrl
         }
 
         if (str_starts_with($path, '/')) {
-            return url($path);
+            return $path;
         }
 
-        return Storage::disk('public')->url($path);
+        // Относительный URL — работает и на localhost, и на 127.0.0.1
+        return '/storage/'.ltrim($path, '/');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Albums\RelationManagers;
 
+use App\Filament\Support\TrackAudioUpload;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -41,19 +42,7 @@ class TracksRelationManager extends RelationManager
                     ->numeric()
                     ->default(0)
                     ->required(),
-                FileUpload::make('audio_path')
-                    ->label('Аудио')
-                    ->disk('public')
-                    ->directory('tracks/audio')
-                    ->visibility('public')
-                    ->acceptedFileTypes([
-                        'audio/mpeg',
-                        'audio/mp3',
-                        'audio/wav',
-                        'audio/x-wav',
-                        'audio/ogg',
-                    ])
-                    ->columnSpanFull(),
+                TrackAudioUpload::make(),
                 FileUpload::make('cover_path')
                     ->label('Обложка трека')
                     ->image()

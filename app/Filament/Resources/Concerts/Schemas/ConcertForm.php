@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Concerts\Schemas;
 
 use App\Enums\ConcertBadgeType;
 use App\Enums\ConcertStatus;
+use App\Filament\Support\EmbeddedTrackSelect;
 use App\Filament\Support\EnumOptions;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -88,11 +89,8 @@ class ConcertForm
                                         RichEditor::make('body')
                                             ->label('Описание')
                                             ->columnSpanFull(),
-                                        Select::make('embedded_track_id')
-                                            ->label('Встроенный трек')
-                                            ->relationship('embeddedTrack', 'title')
-                                            ->searchable()
-                                            ->preload(),
+                                        EmbeddedTrackSelect::make()
+                                            ->columnSpanFull(),
                                         Select::make('fundraising_id')
                                             ->label('Сбор')
                                             ->relationship('fundraising', 'title')

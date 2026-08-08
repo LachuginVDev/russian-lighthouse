@@ -31,8 +31,13 @@
 
       <div class="grid grid--3" data-listing="albums">
         @forelse ($albums as $album)
+          @php $cover = \App\Support\MediaUrl::make($album->cover_path); @endphp
           <article class="card" data-category="{{ $album->year }}">
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+            @if ($cover)
+              <a class="card__media" href="{{ route('albums.show', $album) }}" style="background-image: url('{{ $cover }}')" aria-label="{{ $album->title }}"></a>
+            @else
+              <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+            @endif
             <div class="card__body">
               <span class="card__meta">
                 @if ($album->status === \App\Enums\AlbumStatus::ComingSoon)

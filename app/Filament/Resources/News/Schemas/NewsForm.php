@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\News\Schemas;
 
 use App\Enums\NewsCategory;
+use App\Filament\Support\EmbeddedTrackSelect;
 use App\Filament\Support\EnumOptions;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -61,7 +62,9 @@ class NewsForm
                                             ->rows(3)
                                             ->columnSpanFull(),
                                         RichEditor::make('body')
-                                            ->label('Текст')
+                                            ->label('Текст статьи')
+                                            ->required()
+                                            ->helperText('Этот текст показывается на странице новости. Анонс — только в карточках.')
                                             ->columnSpanFull(),
                                         Select::make('tags')
                                             ->label('Теги')
@@ -70,11 +73,8 @@ class NewsForm
                                             ->preload()
                                             ->searchable()
                                             ->columnSpanFull(),
-                                        Select::make('embedded_track_id')
-                                            ->label('Встроенный трек')
-                                            ->relationship('embeddedTrack', 'title')
-                                            ->searchable()
-                                            ->preload(),
+                                        EmbeddedTrackSelect::make()
+                                            ->columnSpanFull(),
                                     ]),
                             ]),
                         Tab::make('Автор и медиа')
@@ -108,7 +108,9 @@ class NewsForm
                                     ->schema([
                                         DateTimePicker::make('published_at')
                                             ->label('Дата публикации')
-                                            ->seconds(false),
+                                            ->default(now())
+                                            ->seconds(false)
+                                            ->helperText('Пустое поле = черновик (не показывается на сайте).'),
                                         TextInput::make('sort_order')
                                             ->label('Порядок')
                                             ->numeric()
@@ -116,7 +118,9 @@ class NewsForm
                                             ->required(),
                                         Toggle::make('is_featured_home')
                                             ->label('На главной')
-                                            ->inline(false),
+                                            ->default(true)
+                                            ->inline(false)
+                                            ->helperText('Показывать карточку в блоке новостей на главной странице.'),
                                     ]),
                             ]),
                         Tab::make('SEO')

@@ -89,6 +89,13 @@ export function initPlayer() {
     if (currentEl) currentEl.textContent = '0:00';
     audio.src = track.dataset.src || '';
 
+    const coverImg = cover?.querySelector('.player__cover-img');
+    if (coverImg) {
+      const coverUrl = track.dataset.cover || '';
+      coverImg.style.backgroundImage = coverUrl ? `url('${coverUrl}')` : '';
+      coverImg.setAttribute('aria-label', track.dataset.title ? `Обложка «${track.dataset.title}»` : 'Обложка трека');
+    }
+
     if (autoplay) play();
     else pause();
   };

@@ -10,9 +10,15 @@
 @endsection
 
 @section('content')
+  @php
+    $firstTrack = $featuredTracks->first();
+    $firstCover = \App\Support\MediaUrl::make($firstTrack?->cover_path ?: $firstTrack?->album?->cover_path);
+    $cardDigits = preg_replace('/\D+/', '', (string) $settings->card_number);
+  @endphp
+
   <x-schema.music-group />
 
-<!-- ================= HERO ================= -->
+    <!-- ================= HERO ================= -->
     <section class="hero" id="top" aria-label="Приветствие">
       <div class="hero__media" aria-hidden="true" data-hero-parallax>
         <div class="hero__media-layer" data-hero-img></div>
@@ -55,24 +61,20 @@
           <div class="about__media-placeholder">
             <svg aria-hidden="true"><use href="#icon-camera" /></svg>
           </div>
-          <span class="badge badge--gold about__badge">С 2016 года на сцене</span>
+          @if ($settings->stat_years)
+            <span class="badge badge--gold about__badge">С {{ now()->year - (int) $settings->stat_years }} года на сцене</span>
+          @endif
         </div>
 
         <div class="about__body">
-          <p class="eyebrow" data-reveal>О группе</p>
-          <h2 id="about-title" data-reveal>История, рождённая в поездках к&nbsp;тем, кто защищает страну</h2>
-          <p class="lead" data-reveal>
-            «Русский Маяк» начинался как небольшой музыкальный проект друзей — но после первой поездки с
-            концертом в военный госпиталь всё изменилось. Мы поняли: наши песни нужны не только на сцене
-            большого зала, но и в палатах, где выздоравливают бойцы, и у блиндажей, куда мы привозим музыку и
-            слова поддержки.
-          </p>
-          <p data-reveal>
-            Сегодня группа сочетает концертную деятельность с постоянной волонтёрской работой: мы ездим в зону
-            СВО, выступаем перед военнослужащими, помогаем госпиталям и организуем благотворительные сборы.
-            Каждый альбом — это часть нашей миссии: рассказывать правду, поддерживать тех, кто на передовой, и
-            объединять людей вокруг общего дела.
-          </p>
+          <p class="eyebrow" data-reveal>{{ $settings->about_eyebrow ?: 'О группе' }}</p>
+          <h2 id="about-title" data-reveal>{{ $settings->about_title ?: 'История, рождённая в поездках' }}</h2>
+          @if ($settings->about_lead)
+            <p class="lead" data-reveal>{{ $settings->about_lead }}</p>
+          @endif
+          @if ($settings->about_body)
+            <div data-reveal>{!! $settings->about_body !!}</div>
+          @endif
 
           <div class="about__stats" data-reveal>
             <div class="about__stat">
@@ -100,69 +102,83 @@
           <h2 id="music-title" data-reveal>Слушайте песни, которые звучат там, где должна быть тишина</h2>
         </div>
 
-        <div class="player" data-reveal data-player>
-          <div class="player__stage">
-            <div class="player__cover" data-player-cover>
-              <div class="player__cover-img" role="img" aria-label="Обложка альбома «Позывной Надежда»"></div>
+        @if ($featuredTracks->isNotEmpty())
+          <div class="player" data-reveal data-player>
+            <div class="player__stage">
+              <div class="player__cover" data-player-cover>
+                <div
+                  class="player__cover-img"
+                  role="img"
+                  aria-label="Обложка «{{ $firstTrack->title }}»"
+                  @if ($firstCover) style="background-image: url('{{ $firstCover }}')" @endif
+                ></div>
+              </div>
+
+              <div class="player__track-info">
+                <span class="player__track-title" data-player-title>{{ $firstTrack->title }}</span>
+                <span class="player__track-artist" data-player-artist>{{ $firstTrack->artist ?: 'Русский Маяк' }}</span>
+              </div>
+
+              <div class="player__wave" aria-hidden="true" data-player-wave></div>
+
+              <div class="player__controls">
+                <button class="player__control" type="button" data-player-prev aria-label="Предыдущий трек">
+                  <svg aria-hidden="true"><use href="#icon-prev" /></svg>
+                </button>
+                <button class="player__control player__control--play" type="button" data-player-play aria-label="Воспроизвести">
+                  <svg aria-hidden="true" data-player-play-icon><use href="#icon-play" /></svg>
+                </button>
+                <button class="player__control" type="button" data-player-next aria-label="Следующий трек">
+                  <svg aria-hidden="true"><use href="#icon-next" /></svg>
+                </button>
+              </div>
+
+              <div class="player__seek">
+                <span data-player-current>0:00</span>
+                <span class="player__seek-track" data-player-seek>
+                  <span class="player__seek-fill" data-player-seek-fill></span>
+                  <input class="player__seek-input" type="range" min="0" max="100" value="0" aria-label="Перемотка трека" data-player-seek-input />
+                </span>
+                <span data-player-duration>0:00</span>
+              </div>
             </div>
 
-            <div class="player__track-info">
-              <span class="player__track-title" data-player-title>Позывной Надежда</span>
-              <span class="player__track-artist" data-player-artist>Русский Маяк</span>
-            </div>
-
-            <div class="player__wave" aria-hidden="true" data-player-wave></div>
-
-            <div class="player__controls">
-              <button class="player__control" type="button" data-player-prev aria-label="Предыдущий трек">
-                <svg aria-hidden="true"><use href="#icon-prev" /></svg>
-              </button>
-              <button class="player__control player__control--play" type="button" data-player-play aria-label="Воспроизвести">
-                <svg aria-hidden="true" data-player-play-icon><use href="#icon-play" /></svg>
-              </button>
-              <button class="player__control" type="button" data-player-next aria-label="Следующий трек">
-                <svg aria-hidden="true"><use href="#icon-next" /></svg>
-              </button>
-            </div>
-
-            <div class="player__seek">
-              <span data-player-current>0:00</span>
-              <span class="player__seek-track" data-player-seek>
-                <span class="player__seek-fill" data-player-seek-fill></span>
-                <input class="player__seek-input" type="range" min="0" max="100" value="0" aria-label="Перемотка трека" data-player-seek-input />
-              </span>
-              <span data-player-duration>0:00</span>
+            <div class="player__list" role="list" aria-label="Плейлист" data-player-list>
+              @foreach ($featuredTracks as $index => $track)
+                @php
+                  $trackCover = \App\Support\MediaUrl::make($track->cover_path ?: $track->album?->cover_path);
+                  $trackSrc = \App\Support\MediaUrl::make($track->audio_path);
+                @endphp
+                <button
+                  class="player__track {{ $index === 0 ? 'is-active' : '' }}"
+                  type="button"
+                  role="listitem"
+                  data-track
+                  data-src="{{ $trackSrc }}"
+                  data-title="{{ $track->title }}"
+                  data-artist="{{ $track->artist ?: 'Русский Маяк' }}"
+                  data-duration="{{ $track->duration }}"
+                  data-cover="{{ $trackCover }}"
+                >
+                  <span class="player__track-index">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
+                  <span class="player__track-name">
+                    <strong>{{ $track->title }}</strong>
+                    <span>
+                      @if ($track->album)
+                        Альбом «{{ $track->album->title }}»
+                      @else
+                        {{ $track->artist ?: 'Русский Маяк' }}
+                      @endif
+                    </span>
+                  </span>
+                  <span class="player__track-duration">{{ $track->duration }}</span>
+                </button>
+              @endforeach
             </div>
           </div>
-
-          <div class="player__list" role="list" aria-label="Плейлист" data-player-list>
-            <button class="player__track is-active" type="button" role="listitem" data-track data-src="/audio/track-1.mp3" data-title="Позывной Надежда" data-artist="Русский Маяк" data-duration="3:42">
-              <span class="player__track-index">01</span>
-              <span class="player__track-name"><strong>Позывной Надежда</strong><span>Альбом «Свет с передовой»</span></span>
-              <span class="player__track-duration">3:42</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/track-2.mp3" data-title="Маяк" data-artist="Русский Маяк" data-duration="4:05">
-              <span class="player__track-index">02</span>
-              <span class="player__track-name"><strong>Маяк</strong><span>Альбом «Свет с передовой»</span></span>
-              <span class="player__track-duration">4:05</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/track-3.mp3" data-title="Домой" data-artist="Русский Маяк" data-duration="3:18">
-              <span class="player__track-index">03</span>
-              <span class="player__track-name"><strong>Домой</strong><span>Альбом «Домой»</span></span>
-              <span class="player__track-duration">3:18</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/track-4.mp3" data-title="Братство" data-artist="Русский Маяк" data-duration="3:55">
-              <span class="player__track-index">04</span>
-              <span class="player__track-name"><strong>Братство</strong><span>Альбом «Домой»</span></span>
-              <span class="player__track-duration">3:55</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/track-5.mp3" data-title="Письма" data-artist="Русский Маяк" data-duration="4:20">
-              <span class="player__track-index">05</span>
-              <span class="player__track-name"><strong>Письма</strong><span>Альбом «Позывной»</span></span>
-              <span class="player__track-duration">4:20</span>
-            </button>
-          </div>
-        </div>
+        @else
+          <p data-reveal>Треки для главной ещё не добавлены. Отметьте треки «На главной» в админке.</p>
+        @endif
       </div>
     </section>
 
@@ -181,41 +197,28 @@
         </div>
 
         <div class="grid grid--3">
-          <article class="card" data-reveal>
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-            <div class="card__body">
-              <span class="card__meta">2025 · Альбом</span>
-              <h3 class="card__title">Свет с передовой</h3>
-              <p class="card__text">Восемь песен, записанных после поездок к бойцам — о надежде, доме и возвращении.</p>
-              <a class="card__link" href="{{ route('albums.show', 'svet-s-peredovoy') }}">
-                Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
-              </a>
-            </div>
-          </article>
-
-          <article class="card" data-reveal>
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-            <div class="card__body">
-              <span class="card__meta">2023 · Альбом</span>
-              <h3 class="card__title">Домой</h3>
-              <p class="card__text">Альбом, посвящённый тем, кто ждёт и тем, кто возвращается.</p>
-              <a class="card__link" href="{{ route('albums.show', 'svet-s-peredovoy') }}">
-                Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
-              </a>
-            </div>
-          </article>
-
-          <article class="card" data-reveal>
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-            <div class="card__body">
-              <span class="card__meta">2021 · Альбом</span>
-              <h3 class="card__title">Позывной</h3>
-              <p class="card__text">Дебютная работа группы, с которой началась дорога в госпитали и на передовую.</p>
-              <a class="card__link" href="{{ route('albums.show', 'svet-s-peredovoy') }}">
-                Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
-              </a>
-            </div>
-          </article>
+          @forelse ($albums as $album)
+            @php $cover = \App\Support\MediaUrl::make($album->cover_path); @endphp
+            <article class="card" data-reveal>
+              @if ($cover)
+                <a class="card__media" href="{{ route('albums.show', $album) }}" style="background-image: url('{{ $cover }}')" aria-label="{{ $album->title }}"></a>
+              @else
+                <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+              @endif
+              <div class="card__body">
+                <span class="card__meta">{{ $album->year }} · {{ $album->type->label() }}</span>
+                <h3 class="card__title">{{ $album->title }}</h3>
+                @if ($album->excerpt)
+                  <p class="card__text">{{ $album->excerpt }}</p>
+                @endif
+                <a class="card__link" href="{{ route('albums.show', $album) }}">
+                  Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
+                </a>
+              </div>
+            </article>
+          @empty
+            <p data-reveal>Альбомы для главной не отмечены в админке.</p>
+          @endforelse
         </div>
       </div>
     </section>
@@ -234,46 +237,36 @@
           </a>
         </div>
 
-        <div class="swiper" data-video-slider>
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <button class="video-card" type="button" data-video-trigger data-video-title="Концерт в военном госпитале" data-video-embed="https://www.youtube-nocookie.com/embed/YE7VzlLtp-4?autoplay=1&rel=0" data-reveal>
-                <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
-                <span class="video-card__caption">
-                  <span class="video-card__title">Концерт в военном госпитале</span>
-                  <span class="video-card__meta">Документальный · 6:24</span>
-                </span>
-              </button>
-            </div>
-            <div class="swiper-slide">
-              <button class="video-card" type="button" data-video-trigger data-video-title="Поездка в зону СВО" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0" data-reveal>
-                <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
-                <span class="video-card__caption">
-                  <span class="video-card__title">Поездка в зону СВО</span>
-                  <span class="video-card__meta">Репортаж · 9:12</span>
-                </span>
-              </button>
-            </div>
-            <div class="swiper-slide">
-              <button class="video-card" type="button" data-video-trigger data-video-title="Live: «Маяк» на большой сцене" data-video-embed="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&rel=0&start=30" data-reveal>
-                <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
-                <span class="video-card__caption">
-                  <span class="video-card__title">Live: «Маяк» на большой сцене</span>
-                  <span class="video-card__meta">Концерт · 4:50</span>
-                </span>
-              </button>
-            </div>
-            <div class="swiper-slide">
-              <button class="video-card" type="button" data-video-trigger data-video-title="Интервью: почему мы едем на передовую" data-video-embed="https://www.youtube-nocookie.com/embed/YE7VzlLtp-4?autoplay=1&rel=0&start=45" data-reveal>
-                <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
-                <span class="video-card__caption">
-                  <span class="video-card__title">Интервью: почему мы едем на передовую</span>
-                  <span class="video-card__meta">Интервью · 11:03</span>
-                </span>
-              </button>
+        @if ($videos->isNotEmpty())
+          <div class="swiper" data-video-slider>
+            <div class="swiper-wrapper">
+              @foreach ($videos as $video)
+                @php $thumb = \App\Support\MediaUrl::make($video->thumbnail_path); @endphp
+                <div class="swiper-slide">
+                  <button
+                    class="video-card"
+                    type="button"
+                    data-video-trigger
+                    data-video-title="{{ $video->title }}"
+                    data-video-embed="{{ $video->embed_url }}"
+                    data-reveal
+                    @if ($thumb) style="background-image: url('{{ $thumb }}')" @endif
+                  >
+                    <span class="video-card__play"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+                    <span class="video-card__caption">
+                      <span class="video-card__title">{{ $video->title }}</span>
+                      <span class="video-card__meta">
+                        {{ collect([$video->type_label, $video->duration_label])->filter()->implode(' · ') }}
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              @endforeach
             </div>
           </div>
-        </div>
+        @else
+          <p data-reveal>Видео для главной не отмечены в админке.</p>
+        @endif
       </div>
     </section>
 
@@ -293,37 +286,33 @@
 
         <div class="photo-gallery__filters" role="tablist" aria-label="Фильтр фотографий" data-gallery-filters>
           <button class="photo-gallery__filter is-active" type="button" role="tab" aria-selected="true" data-filter="all">Все</button>
-          <button class="photo-gallery__filter" type="button" role="tab" aria-selected="false" data-filter="concerts">Концерты</button>
-          <button class="photo-gallery__filter" type="button" role="tab" aria-selected="false" data-filter="trips">Поездки</button>
-          <button class="photo-gallery__filter" type="button" role="tab" aria-selected="false" data-filter="hospitals">Госпитали</button>
-          <button class="photo-gallery__filter" type="button" role="tab" aria-selected="false" data-filter="backstage">Backstage</button>
+          @foreach (\App\Enums\PhotoReportCategory::cases() as $category)
+            <button class="photo-gallery__filter" type="button" role="tab" aria-selected="false" data-filter="{{ $category->value }}">{{ $category->label() }}</button>
+          @endforeach
         </div>
 
         <div class="photo-gallery" data-gallery>
-          <button class="photo-gallery__item" type="button" data-category="concerts" data-reveal aria-label="Открыть фотографию: концерт группы">
-            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
-          </button>
-          <button class="photo-gallery__item" type="button" data-category="trips" data-reveal aria-label="Открыть фотографию: поездка в зону СВО">
-            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
-          </button>
-          <button class="photo-gallery__item" type="button" data-category="hospitals" data-reveal aria-label="Открыть фотографию: визит в госпиталь">
-            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
-          </button>
-          <button class="photo-gallery__item" type="button" data-category="backstage" data-reveal aria-label="Открыть фотографию: backstage">
-            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
-          </button>
-          <button class="photo-gallery__item" type="button" data-category="concerts" data-reveal aria-label="Открыть фотографию: концерт группы">
-            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
-          </button>
-          <button class="photo-gallery__item" type="button" data-category="trips" data-reveal aria-label="Открыть фотографию: поездка в зону СВО">
-            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
-          </button>
-          <button class="photo-gallery__item" type="button" data-category="hospitals" data-reveal aria-label="Открыть фотографию: визит в госпиталь">
-            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
-          </button>
-          <button class="photo-gallery__item" type="button" data-category="concerts" data-reveal aria-label="Открыть фотографию: концерт группы">
-            <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
-          </button>
+          @forelse ($featuredPhotos as $photo)
+            @php
+              $src = \App\Support\MediaUrl::make($photo->image_path);
+              $category = $photo->photoReport?->category?->value ?: 'concerts';
+              $label = $photo->alt ?: $photo->caption ?: $photo->photoReport?->title ?: 'Фотография';
+            @endphp
+            @if ($src)
+              <button
+                class="photo-gallery__item"
+                type="button"
+                data-category="{{ $category }}"
+                data-reveal
+                aria-label="Открыть фотографию: {{ $label }}"
+                style="background-image: url('{{ $src }}')"
+              >
+                <span class="photo-gallery__zoom"><svg aria-hidden="true"><use href="#icon-zoom" /></svg></span>
+              </button>
+            @endif
+          @empty
+            <p data-reveal>Фото для главной пока нет. Отметьте фото или фотоотчёты «На главной».</p>
+          @endforelse
         </div>
       </div>
     </section>
@@ -343,41 +332,33 @@
         </div>
 
         <div class="grid grid--3">
-          <article class="card" data-reveal>
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-            <div class="card__body">
-              <span class="card__meta"><time datetime="2026-07-12">12 июля 2026</time> · Поездки</span>
-              <h3 class="card__title">Новая поездка в госпиталь Ростова</h3>
-              <p class="card__text">Мы привезли не только концерт, но и партию медицинского оборудования для реабилитации.</p>
-              <a class="card__link" href="{{ route('news.show', 'gospital-rostov') }}">
-                Читать <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
-              </a>
-            </div>
-          </article>
-
-          <article class="card" data-reveal>
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-            <div class="card__body">
-              <span class="card__meta"><time datetime="2026-06-28">28 июня 2026</time> · Релиз</span>
-              <h3 class="card__title">Вышел клип на песню «Маяк»</h3>
-              <p class="card__text">Съёмки прошли в местах, где мы выступали перед военнослужащими этой весной.</p>
-              <a class="card__link" href="{{ route('news.show', 'gospital-rostov') }}">
-                Читать <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
-              </a>
-            </div>
-          </article>
-
-          <article class="card" data-reveal>
-            <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-            <div class="card__body">
-              <span class="card__meta"><time datetime="2026-06-05">5 июня 2026</time> · Благотворительность</span>
-              <h3 class="card__title">Собрали 2 млн ₽ на реабилитацию бойцов</h3>
-              <p class="card__text">Благодарим каждого, кто откликнулся — отчёт о расходах уже в разделе отчётности.</p>
-              <a class="card__link" href="{{ route('news.show', 'gospital-rostov') }}">
-                Читать <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
-              </a>
-            </div>
-          </article>
+          @forelse ($news as $item)
+            @php $cover = \App\Support\MediaUrl::make($item->cover_path); @endphp
+            <article class="card" data-reveal>
+              @if ($cover)
+                <a class="card__media" href="{{ route('news.show', $item) }}" style="background-image: url('{{ $cover }}')" aria-label="{{ $item->title }}"></a>
+              @else
+                <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+              @endif
+              <div class="card__body">
+                <span class="card__meta">
+                  @if ($item->published_at)
+                    <time datetime="{{ $item->published_at->toDateString() }}">{{ $item->published_at->locale('ru')->translatedFormat('j F Y') }}</time>
+                  @endif
+                  · {{ $item->category->label() }}
+                </span>
+                <h3 class="card__title">{{ $item->title }}</h3>
+                @if ($item->excerpt)
+                  <p class="card__text">{{ $item->excerpt }}</p>
+                @endif
+                <a class="card__link" href="{{ route('news.show', $item) }}">
+                  Читать <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
+                </a>
+              </div>
+            </article>
+          @empty
+            <p data-reveal>Новостей пока нет. Добавьте публикацию в админке и отметьте «На главной».</p>
+          @endforelse
         </div>
       </div>
     </section>
@@ -397,38 +378,24 @@
         </div>
 
         <div class="events-list" data-reveal>
-          <div class="event-row">
-            <div class="event-row__date"><span class="event-row__day">14</span><span class="event-row__month">сен</span></div>
-            <div>
-              <h3 class="event-row__title">Благотворительный концерт «Свет для героев»</h3>
-              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Москва, Live Arena</p>
+          @forelse ($concerts as $concert)
+            <div class="event-row">
+              <div class="event-row__date">
+                <span class="event-row__day">{{ $concert->starts_at?->format('d') }}</span>
+                <span class="event-row__month">{{ $concert->starts_at?->locale('ru')->translatedFormat('M') }}</span>
+              </div>
+              <div>
+                <h3 class="event-row__title">{{ $concert->title }}</h3>
+                <p class="event-row__place">
+                  <svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg>
+                  {{ collect([$concert->city, $concert->venue])->filter()->implode(', ') }}
+                </p>
+              </div>
+              <a class="btn btn--outline btn--sm" href="{{ route('concerts.show', $concert) }}">Подробнее</a>
             </div>
-            <a class="btn btn--outline btn--sm" href="{{ route('concerts.show', 'svet-dlya-geroev') }}">Подробнее</a>
-          </div>
-          <div class="event-row">
-            <div class="event-row__date"><span class="event-row__day">27</span><span class="event-row__month">сен</span></div>
-            <div>
-              <h3 class="event-row__title">Поездка с концертом в госпиталь Ростова</h3>
-              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Ростов-на-Дону</p>
-            </div>
-            <a class="btn btn--outline btn--sm" href="{{ route('concerts.show', 'svet-dlya-geroev') }}">Подробнее</a>
-          </div>
-          <div class="event-row">
-            <div class="event-row__date"><span class="event-row__day">03</span><span class="event-row__month">окт</span></div>
-            <div>
-              <h3 class="event-row__title">Акустический концерт «Домой»</h3>
-              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Санкт-Петербург, ДК Ленсовета</p>
-            </div>
-            <a class="btn btn--outline btn--sm" href="{{ route('concerts.show', 'svet-dlya-geroev') }}">Подробнее</a>
-          </div>
-          <div class="event-row">
-            <div class="event-row__date"><span class="event-row__day">19</span><span class="event-row__month">окт</span></div>
-            <div>
-              <h3 class="event-row__title">Благотворительная акция сбора гуманитарной помощи</h3>
-              <p class="event-row__place"><svg aria-hidden="true" style="width:14px;height:14px;display:inline;vertical-align:-2px"><use href="#icon-pin" /></svg> Краснодар, ДК Металлург</p>
-            </div>
-            <a class="btn btn--outline btn--sm" href="{{ route('concerts.show', 'svet-dlya-geroev') }}">Подробнее</a>
-          </div>
+          @empty
+            <p>Ближайших мероприятий пока нет.</p>
+          @endforelse
         </div>
       </div>
     </section>
@@ -436,46 +403,50 @@
     <!-- ================= БЛАГОТВОРИТЕЛЬНЫЕ СБОРЫ ================= -->
     <section class="section section--muted" id="fundraising" aria-labelledby="fundraising-title">
       <div class="container">
-        <div class="fundraising" data-reveal>
-          <div class="fundraising__grid">
-            <div class="fundraising__gallery" aria-hidden="true">
-              <div class="fundraising__photo"></div>
-              <div class="fundraising__photo"></div>
-              <div class="fundraising__photo"></div>
-            </div>
-
-            <div class="fundraising__content">
-              <span class="badge badge--live">Сбор открыт</span>
-              <p class="eyebrow">Благотворительность</p>
-              <h2 id="fundraising-title">{{ $fundraising?->title ?? 'Реабилитационное оборудование для военного госпиталя' }}</h2>
-              <p class="lead">
-                {{ $fundraising?->lead ?? 'Собираем средства на аппараты для восстановления бойцов после ранений. Каждый рубль идёт напрямую на закупку оборудования — отчёт о расходах публикуется в открытом доступе.' }}
-              </p>
-
-              <div class="progress" data-progress data-goal="{{ $fundraising?->goal_amount ?? 4500000 }}" data-current="{{ $fundraising?->current_amount ?? 3180000 }}">
-                <div class="progress__meta">
-                  <span class="progress__sum"><span data-progress-current="0">0</span> ₽</span>
-                  <span class="progress__goal">из {{ number_format($fundraising?->goal_amount ?? 4500000, 0, ',', ' ') }} ₽</span>
-                </div>
-                <div class="progress__track">
-                  <div class="progress__fill" data-progress-fill></div>
-                </div>
-                <span class="progress__percent" data-progress-percent>0%</span>
+        @if ($fundraising)
+          <div class="fundraising" data-reveal>
+            <div class="fundraising__grid">
+              <div class="fundraising__gallery" aria-hidden="true">
+                <div class="fundraising__photo"></div>
+                <div class="fundraising__photo"></div>
+                <div class="fundraising__photo"></div>
               </div>
 
-              <div class="hero__actions">
-                <a class="btn btn--primary" href="#requisites">
-                  <svg aria-hidden="true"><use href="#icon-heart" /></svg>
-                  Поддержать сбор
-                </a>
-                <a class="fundraising__report-link" href="{{ route('pages.reports') }}">
-                  <svg aria-hidden="true"><use href="#icon-document" /></svg>
-                  Отчёты о расходах
-                </a>
+              <div class="fundraising__content">
+                <span class="badge badge--live">Сбор {{ mb_strtolower($fundraising->status->label()) }}</span>
+                <p class="eyebrow">Благотворительность</p>
+                <h2 id="fundraising-title">{{ $fundraising->title }}</h2>
+                @if ($fundraising->lead)
+                  <p class="lead">{{ $fundraising->lead }}</p>
+                @endif
+
+                <div class="progress" data-progress data-goal="{{ $fundraising->goal_amount }}" data-current="{{ $fundraising->current_amount }}">
+                  <div class="progress__meta">
+                    <span class="progress__sum"><span data-progress-current="0">0</span> ₽</span>
+                    <span class="progress__goal">из {{ number_format($fundraising->goal_amount, 0, ',', ' ') }} ₽</span>
+                  </div>
+                  <div class="progress__track">
+                    <div class="progress__fill" data-progress-fill></div>
+                  </div>
+                  <span class="progress__percent" data-progress-percent>0%</span>
+                </div>
+
+                <div class="hero__actions">
+                  <a class="btn btn--primary" href="#requisites">
+                    <svg aria-hidden="true"><use href="#icon-heart" /></svg>
+                    Поддержать сбор
+                  </a>
+                  <a class="fundraising__report-link" href="{{ route('pages.reports') }}">
+                    <svg aria-hidden="true"><use href="#icon-document" /></svg>
+                    Отчёты о расходах
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        @else
+          <p data-reveal>Активный сбор на главной не выбран. Создайте сбор и отметьте «На главной».</p>
+        @endif
       </div>
     </section>
 
@@ -495,16 +466,18 @@
             </div>
             <div class="requisite-card__row">
               <span class="requisite-card__label">Номер карты</span>
-              <span class="requisite-card__value">2200 1234 5678 9010</span>
+              <span class="requisite-card__value">{{ $settings->card_number ?: '—' }}</span>
             </div>
             <div class="requisite-card__row">
               <span class="requisite-card__label">Получатель</span>
-              <span class="requisite-card__value">Фонд «Русский Маяк»</span>
+              <span class="requisite-card__value">{{ $settings->recipient ?: '—' }}</span>
             </div>
-            <button class="requisite-card__copy" type="button" data-copy="2200123456789010">
-              <svg aria-hidden="true"><use href="#icon-copy" /></svg>
-              Скопировать номер
-            </button>
+            @if ($cardDigits)
+              <button class="requisite-card__copy" type="button" data-copy="{{ $cardDigits }}">
+                <svg aria-hidden="true"><use href="#icon-copy" /></svg>
+                Скопировать номер
+              </button>
+            @endif
           </div>
 
           <div class="requisite-card" data-reveal>
@@ -514,20 +487,26 @@
             </div>
             <div class="requisite-card__row">
               <span class="requisite-card__label">ИНН</span>
-              <span class="requisite-card__value">7700000000</span>
+              <span class="requisite-card__value">{{ $settings->inn ?: '—' }}</span>
             </div>
             <div class="requisite-card__row">
               <span class="requisite-card__label">Р/с</span>
-              <span class="requisite-card__value">40703810000000000000</span>
+              <span class="requisite-card__value">{{ $settings->bank_account ?: '—' }}</span>
             </div>
             <div class="requisite-card__row">
               <span class="requisite-card__label">БИК</span>
-              <span class="requisite-card__value">044525000</span>
+              <span class="requisite-card__value">{{ $settings->bik ?: '—' }}</span>
             </div>
-            <button class="requisite-card__copy" type="button" data-copy="7700000000, Р/с 40703810000000000000, БИК 044525000">
-              <svg aria-hidden="true"><use href="#icon-copy" /></svg>
-              Скопировать реквизиты
-            </button>
+            @if ($settings->inn || $settings->bank_account || $settings->bik)
+              <button
+                class="requisite-card__copy"
+                type="button"
+                data-copy="ИНН {{ $settings->inn }}, Р/с {{ $settings->bank_account }}, БИК {{ $settings->bik }}"
+              >
+                <svg aria-hidden="true"><use href="#icon-copy" /></svg>
+                Скопировать реквизиты
+              </button>
+            @endif
           </div>
 
           <div class="requisite-card" data-reveal>
@@ -538,19 +517,13 @@
             <p class="requisite-card__value" style="text-align:left">
               Отсканируйте QR-код в приложении банка — сумма перевода не ограничена.
             </p>
+            @php $qr = \App\Support\MediaUrl::make($settings->qr_image_path); @endphp
             <div class="requisite-card__qr" role="img" aria-label="QR-код для перевода через Систему быстрых платежей">
-              <svg viewBox="0 0 100 100" aria-hidden="true">
-                <rect width="100" height="100" fill="#fff" />
-                <rect x="10" y="10" width="20" height="20" fill="#0a0c10" />
-                <rect x="70" y="10" width="20" height="20" fill="#0a0c10" />
-                <rect x="10" y="70" width="20" height="20" fill="#0a0c10" />
-                <rect x="40" y="10" width="10" height="10" fill="#0a0c10" />
-                <rect x="40" y="40" width="20" height="20" fill="#0a0c10" />
-                <rect x="70" y="40" width="10" height="10" fill="#0a0c10" />
-                <rect x="40" y="70" width="10" height="10" fill="#0a0c10" />
-                <rect x="60" y="70" width="10" height="10" fill="#0a0c10" />
-                <rect x="80" y="80" width="10" height="10" fill="#0a0c10" />
-              </svg>
+              @if ($qr)
+                <img src="{{ $qr }}" alt="QR-код для перевода" width="160" height="160" />
+              @else
+                <p style="padding:1rem;color:var(--color-text-dim)">Загрузите QR в настройках сайта.</p>
+              @endif
             </div>
           </div>
         </div>
@@ -566,24 +539,27 @@
         </div>
       </div>
 
-      <div class="partners__marquee-wrap">
-        <div class="marquee">
-          <ul class="marquee__track">
-            <li class="marquee__item">Фонд «Защитник»</li>
-            <li class="marquee__item">Военный госпиталь №1</li>
-            <li class="marquee__item">Радио «Победа»</li>
-            <li class="marquee__item">Ассоциация ветеранов</li>
-            <li class="marquee__item">Медиахолдинг «Звезда»</li>
-            <li class="marquee__item">Фонд «Своих не бросаем»</li>
-            <li class="marquee__item" aria-hidden="true">Фонд «Защитник»</li>
-            <li class="marquee__item" aria-hidden="true">Военный госпиталь №1</li>
-            <li class="marquee__item" aria-hidden="true">Радио «Победа»</li>
-            <li class="marquee__item" aria-hidden="true">Ассоциация ветеранов</li>
-            <li class="marquee__item" aria-hidden="true">Медиахолдинг «Звезда»</li>
-            <li class="marquee__item" aria-hidden="true">Фонд «Своих не бросаем»</li>
-          </ul>
+      @if ($partners->isNotEmpty())
+        <div class="partners__marquee-wrap">
+          <div class="marquee">
+            <ul class="marquee__track">
+              @foreach ([false, true] as $isClone)
+                @foreach ($partners as $partner)
+                  <li class="marquee__item" @if ($isClone) aria-hidden="true" @endif>
+                    @if ($partner->url)
+                      <a href="{{ $partner->url }}" target="_blank" rel="noopener noreferrer">{{ $partner->name }}</a>
+                    @else
+                      {{ $partner->name }}
+                    @endif
+                  </li>
+                @endforeach
+              @endforeach
+            </ul>
+          </div>
         </div>
-      </div>
+      @else
+        <div class="container"><p data-reveal>Партнёры пока не добавлены.</p></div>
+      @endif
     </section>
 
     <!-- ================= КОНТАКТЫ ================= -->
@@ -596,37 +572,49 @@
 
         <div class="contacts__grid">
           <div class="contacts__info" data-reveal>
-            <div class="contacts__info-item">
-              <span class="contacts__info-icon"><svg aria-hidden="true"><use href="#icon-phone" /></svg></span>
-              <div>
-                <span class="contacts__info-label">Телефон</span>
-                <a class="contacts__info-value" href="tel:+79990000000">+7 (999) 000-00-00</a>
+            @if ($settings->phone)
+              <div class="contacts__info-item">
+                <span class="contacts__info-icon"><svg aria-hidden="true"><use href="#icon-phone" /></svg></span>
+                <div>
+                  <span class="contacts__info-label">Телефон</span>
+                  <a class="contacts__info-value" href="tel:{{ preg_replace('/\D+/', '', $settings->phone) }}">{{ $settings->phone }}</a>
+                </div>
               </div>
-            </div>
-            <div class="contacts__info-item">
-              <span class="contacts__info-icon"><svg aria-hidden="true"><use href="#icon-mail" /></svg></span>
-              <div>
-                <span class="contacts__info-label">Email</span>
-                <a class="contacts__info-value" href="mailto:info@russkiy-mayak.ru">info@russkiy-mayak.ru</a>
+            @endif
+            @if ($settings->email)
+              <div class="contacts__info-item">
+                <span class="contacts__info-icon"><svg aria-hidden="true"><use href="#icon-mail" /></svg></span>
+                <div>
+                  <span class="contacts__info-label">Email</span>
+                  <a class="contacts__info-value" href="mailto:{{ $settings->email }}">{{ $settings->email }}</a>
+                </div>
               </div>
-            </div>
-            <div class="contacts__info-item">
-              <span class="contacts__info-icon"><svg aria-hidden="true"><use href="#icon-pin" /></svg></span>
-              <div>
-                <span class="contacts__info-label">Офис</span>
-                <p class="contacts__info-value">Москва, ул. Примерная, 10</p>
+            @endif
+            @if ($settings->address)
+              <div class="contacts__info-item">
+                <span class="contacts__info-icon"><svg aria-hidden="true"><use href="#icon-pin" /></svg></span>
+                <div>
+                  <span class="contacts__info-label">Офис</span>
+                  <p class="contacts__info-value">{{ $settings->address }}</p>
+                </div>
               </div>
-            </div>
+            @endif
             <div class="footer__social">
-              <a class="footer__social-link" href="https://vk.com/russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Группа во ВКонтакте">
-                <svg aria-hidden="true"><use href="#icon-vk" /></svg>
-              </a>
-              <a class="footer__social-link" href="https://t.me/russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Канал в Telegram">
-                <svg aria-hidden="true"><use href="#icon-telegram" /></svg>
-              </a>
-              <a class="footer__social-link" href="https://youtube.com/@russkiy_mayak" target="_blank" rel="noopener noreferrer" aria-label="Канал на YouTube">
-                <svg aria-hidden="true"><use href="#icon-youtube" /></svg>
-              </a>
+              @if ($settings->vk_url)
+                <a class="footer__social-link" href="{{ $settings->vk_url }}" target="_blank" rel="noopener noreferrer" aria-label="Группа во ВКонтакте">
+                  <svg aria-hidden="true"><use href="#icon-vk" /></svg>
+                </a>
+              @endif
+              @if ($settings->telegram_url)
+                <a class="footer__social-link" href="{{ $settings->telegram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Канал в Telegram">
+                  <svg aria-hidden="true"><use href="#icon-telegram" /></svg>
+                </a>
+              @endif
+              @if ($settings->youtube_url)
+                <a class="footer__social-link" href="{{ $settings->youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="Канал на YouTube">
+                  <svg aria-hidden="true"><use href="#icon-youtube" /></svg>
+                </a>
+              @endif
             </div>
           </div>
 

@@ -19,8 +19,13 @@
 
   &__media {
     position: relative;
+    display: block;
     aspect-ratio: 4 / 3;
     overflow: clip;
+    background-color: #12151c;
+    background-size: cover;
+    background-position: center;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
 
     img {
       width: 100%;
@@ -30,6 +35,7 @@
     }
   }
 
+  &:hover &__media:not(.card__media--placeholder),
   &:hover &__media img {
     transform: scale(1.06);
   }

@@ -18,11 +18,12 @@
   ]);
 
   $playerHtml = '';
+  $coverUrl = \App\Support\MediaUrl::make($item->cover_path);
   if ($item->embeddedTrack) {
       $track = $item->embeddedTrack;
       $title = e($track->title);
       $artist = e($track->artist);
-      $src = e($track->audio_path);
+      $src = e(\App\Support\MediaUrl::make($track->audio_path) ?: $track->audio_path);
       $duration = e($track->duration);
       $playerHtml = <<<HTML
 <div class="article__player-embed" data-player>
@@ -123,11 +124,19 @@ HTML;
       @endif
     </div>
 
-    <div class="article__cover" style="margin-top: var(--space-8)" data-reveal></div>
+    @if ($coverUrl)
+      <div class="article__cover" style="margin-top: var(--space-8); background-image: url('{{ $coverUrl }}')" data-reveal role="img" aria-label="{{ $item->title }}"></div>
+    @endif
 
     <div class="article__layout">
       <article class="article__body" data-reveal>
-        {!! $bodyHtml !!}
+        @if (filled(trim(strip_tags((string) $bodyHtml))))
+          {!! $bodyHtml !!}
+        @elseif ($item->excerpt)
+          <p>{{ $item->excerpt }}</p>
+        @else
+          <p>Текст новости пока не заполнен.</p>
+        @endif
 
         @if ($item->tags->isNotEmpty())
           <div class="article__tags">
@@ -164,8 +173,13 @@ HTML;
         </div>
         <div class="grid grid--3">
           @foreach ($related as $relatedItem)
+            @php $relatedCover = \App\Support\MediaUrl::make($relatedItem->cover_path); @endphp
             <article class="card">
-              <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+              @if ($relatedCover)
+                <a class="card__media" href="{{ route('news.show', $relatedItem) }}" style="background-image: url('{{ $relatedCover }}')" aria-label="{{ $relatedItem->title }}"></a>
+              @else
+                <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
+              @endif
               <div class="card__body">
                 <span class="card__meta">
                   @if ($relatedItem->published_at)

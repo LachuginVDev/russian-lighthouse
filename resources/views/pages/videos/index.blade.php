@@ -31,16 +31,22 @@
 
       <div class="grid grid--3" data-listing="videos">
         @forelse ($videos as $video)
+          @php $thumb = \App\Support\MediaUrl::make($video->thumbnail_path); @endphp
           <article class="card card--video" data-category="{{ $video->category->value }}">
             <button
-              class="card__media card__media--placeholder"
+              class="card__media {{ $thumb ? '' : 'card__media--placeholder' }}"
               type="button"
               data-video-trigger
               data-video-embed="{{ $video->embed_url }}"
               data-video-title="{{ $video->title }}"
               aria-label="Смотреть: {{ $video->title }}"
+              @if ($thumb) style="background-image: url('{{ $thumb }}')" @endif
             >
-              <svg aria-hidden="true"><use href="#icon-play" /></svg>
+              @unless ($thumb)
+                <svg aria-hidden="true"><use href="#icon-play" /></svg>
+              @else
+                <span class="video-card__play" style="position:absolute;inset:0;display:grid;place-items:center"><span class="video-card__play-btn"><svg aria-hidden="true"><use href="#icon-play" /></svg></span></span>
+              @endunless
             </button>
             <div class="card__body">
               <span class="card__meta">{{ $video->type_label }} · {{ $video->duration_label }}</span>
