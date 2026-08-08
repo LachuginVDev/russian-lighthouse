@@ -22,12 +22,10 @@
       <div class="hero__overlay" aria-hidden="true"></div>
 
       <div class="container hero__inner">
-        <p class="eyebrow hero__eyebrow" data-reveal>Музыка. Память. Единство.</p>
-        <h1 class="hero__title" data-split-text>Русский Маяк</h1>
+        <p class="eyebrow hero__eyebrow" data-reveal>{{ $settings->hero_eyebrow ?: 'Музыка. Память. Единство.' }}</p>
+        <h1 class="hero__title" data-split-text>{{ $settings->hero_title ?: 'Русский Маяк' }}</h1>
         <p class="lead hero__subtitle" data-reveal>
-          Мы пишем песни о силе духа и едем туда, где эта сила нужна больше всего — в госпитали и в зону
-          проведения СВО. Музыка «Русского Маяка» — это свет для тех, кто защищает Родину, и повод остановиться
-          и помочь для всех остальных.
+          {{ $settings->hero_subtitle ?: 'Мы пишем песни о силе духа и едем туда, где эта сила нужна больше всего — в госпитали и в зону проведения СВО.' }}
         </p>
         <div class="hero__actions" data-reveal>
           <a class="btn btn--primary" href="#music">
@@ -69,15 +67,15 @@
 
           <div class="about__stats" data-reveal>
             <div class="about__stat">
-              <span class="about__stat-value" data-count="9">0</span>
+              <span class="about__stat-value" data-count="{{ $settings->stat_years }}">0</span>
               <span class="about__stat-label">Лет на сцене</span>
             </div>
             <div class="about__stat">
-              <span class="about__stat-value" data-count="128">0</span>
+              <span class="about__stat-value" data-count="{{ $settings->stat_concerts }}">0</span>
               <span class="about__stat-label">Концертов</span>
             </div>
             <div class="about__stat">
-              <span class="about__stat-value" data-count="46">0</span>
+              <span class="about__stat-value" data-count="{{ $settings->stat_trips }}">0</span>
               <span class="about__stat-label">Поездок в госпитали и зону СВО</span>
             </div>
           </div>
@@ -440,16 +438,15 @@
             <div class="fundraising__content">
               <span class="badge badge--live">Сбор открыт</span>
               <p class="eyebrow">Благотворительность</p>
-              <h2 id="fundraising-title">Реабилитационное оборудование для военного госпиталя</h2>
+              <h2 id="fundraising-title">{{ $fundraising?->title ?? 'Реабилитационное оборудование для военного госпиталя' }}</h2>
               <p class="lead">
-                Собираем средства на аппараты для восстановления бойцов после ранений. Каждый рубль идёт
-                напрямую на закупку оборудования — отчёт о расходах публикуется в открытом доступе.
+                {{ $fundraising?->lead ?? 'Собираем средства на аппараты для восстановления бойцов после ранений. Каждый рубль идёт напрямую на закупку оборудования — отчёт о расходах публикуется в открытом доступе.' }}
               </p>
 
-              <div class="progress" data-progress data-goal="4500000" data-current="3180000">
+              <div class="progress" data-progress data-goal="{{ $fundraising?->goal_amount ?? 4500000 }}" data-current="{{ $fundraising?->current_amount ?? 3180000 }}">
                 <div class="progress__meta">
                   <span class="progress__sum"><span data-progress-current="0">0</span> ₽</span>
-                  <span class="progress__goal">из 4 500 000 ₽</span>
+                  <span class="progress__goal">из {{ number_format($fundraising?->goal_amount ?? 4500000, 0, ',', ' ') }} ₽</span>
                 </div>
                 <div class="progress__track">
                   <div class="progress__fill" data-progress-fill></div>

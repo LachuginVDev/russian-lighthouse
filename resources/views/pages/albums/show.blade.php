@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', "Альбом «Свет с передовой» — Русский Маяк")
-@section('description', "«Свет с передовой» — альбом группы «Русский Маяк», записанный после поездок в госпитали и зону СВО. Слушайте треки, читайте историю создания.")
-@section('canonical_path', "/albums/svet-s-peredovoy")
+@section('title', $album->meta_title ?: "Альбом «{$album->title}» — Русский Маяк")
+@section('description', $album->meta_description ?: ($album->excerpt ?: ''))
+@section('canonical_path', "/albums/{$album->slug}")
 @section('og_type', "music.album")
 
 @section('vite')
@@ -14,23 +14,11 @@
     {
       "@@context": "https://schema.org",
       "@@type": "MusicAlbum",
-      "name": "Свет с передовой",
+      "name": @json($album->title),
       "byArtist": { "@@type": "MusicGroup", "name": "Русский Маяк" },
-      "datePublished": "2025",
-      "genre": "Патриотическая музыка",
-      "numTracks": 8
-    }
-  </script>
-
-<script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@@type": "ListItem", "position": 1, "name": "Главная", "item": "https://russkiy-mayak.ru/" },
-        { "@@type": "ListItem", "position": 2, "name": "Дискография", "item": "https://russkiy-mayak.ru/albums" },
-        { "@@type": "ListItem", "position": 3, "name": "Свет с передовой" }
-      ]
+      "datePublished": @json((string) $album->year),
+      "genre": @json($album->genre),
+      "numTracks": {{ $album->tracks->count() }}
     }
   </script>
 
@@ -40,32 +28,35 @@
           <ol class="breadcrumbs__list">
             <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="{{ route('home') }}">Главная</a></li>
             <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="{{ route('albums.index') }}">Дискография</a></li>
-            <li class="breadcrumbs__item" aria-current="page">Свет с передовой</li>
+            <li class="breadcrumbs__item" aria-current="page">{{ $album->title }}</li>
           </ol>
         </nav>
 
         <div class="album-hero">
           <div class="album-hero__cover" data-reveal></div>
           <div data-reveal>
-            <span class="badge badge--gold">Новый альбом</span>
-            <h1 style="margin-top: var(--space-4)">Свет с передовой</h1>
-            <p class="lead" style="margin-top: var(--space-3)">
-              Восемь песен, записанных после серии поездок к бойцам — о надежде, доме и возвращении. Каждый трек
-              вырос из историй, услышанных в госпиталях и у блиндажей.
-            </p>
+            @if ($album->badge_label)
+              <span class="badge badge--gold">{{ $album->badge_label }}</span>
+            @endif
+            <h1 style="margin-top: var(--space-4)">{{ $album->title }}</h1>
+            <p class="lead" style="margin-top: var(--space-3)">{{ $album->excerpt }}</p>
             <div class="album-hero__meta">
-              <span>Год: 2025</span>
-              <span>Треков: 8</span>
-              <span>Длительность: ≈ 32 минуты</span>
-              <span>Жанр: Патриотическая музыка</span>
+              @if ($album->year)<span>Год: {{ $album->year }}</span>@endif
+              <span>Треков: {{ $album->tracks->count() }}</span>
+              @if ($album->duration_label)<span>Длительность: {{ $album->duration_label }}</span>@endif
+              @if ($album->genre)<span>Жанр: {{ $album->genre }}</span>@endif
             </div>
             <div class="album-hero__actions">
               <a class="btn btn--primary" href="#tracklist">
                 <svg aria-hidden="true"><use href="#icon-play" /></svg>
                 Слушать альбом
               </a>
-              <a class="btn btn--outline btn--sm" href="https://vk.com/russkiy_mayak" target="_blank" rel="noopener noreferrer">VK Музыка</a>
-              <a class="btn btn--outline btn--sm" href="https://youtube.com/@russkiy_mayak" target="_blank" rel="noopener noreferrer">YouTube Music</a>
+              @if ($album->vk_url)
+                <a class="btn btn--outline btn--sm" href="{{ $album->vk_url }}" target="_blank" rel="noopener noreferrer">VK Музыка</a>
+              @endif
+              @if ($album->youtube_music_url)
+                <a class="btn btn--outline btn--sm" href="{{ $album->youtube_music_url }}" target="_blank" rel="noopener noreferrer">YouTube Music</a>
+              @endif
             </div>
           </div>
         </div>
@@ -73,12 +64,12 @@
         <div id="tracklist" class="player" data-reveal data-player>
           <div class="player__stage">
             <div class="player__cover" data-player-cover>
-              <div class="player__cover-img" role="img" aria-label="Обложка альбома «Свет с передовой»"></div>
+              <div class="player__cover-img" role="img" aria-label="Обложка альбома «{{ $album->title }}»"></div>
             </div>
 
             <div class="player__track-info">
-              <span class="player__track-title" data-player-title>Свет</span>
-              <span class="player__track-artist" data-player-artist>Русский Маяк</span>
+              <span class="player__track-title" data-player-title>{{ $album->tracks->first()?->title }}</span>
+              <span class="player__track-artist" data-player-artist>{{ $album->tracks->first()?->artist }}</span>
             </div>
 
             <div class="player__wave" aria-hidden="true" data-player-wave></div>
@@ -106,98 +97,31 @@
           </div>
 
           <div class="player__list" role="list" aria-label="Треклист альбома" data-player-list>
-            <button class="player__track is-active" type="button" role="listitem" data-track data-src="/audio/svet.mp3" data-title="Свет" data-artist="Русский Маяк" data-duration="3:20">
-              <span class="player__track-index">01</span>
-              <span class="player__track-name"><strong>Свет</strong><span>Свет с передовой</span></span>
-              <span class="player__track-duration">3:20</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/pozyvnoy-nadezhda.mp3" data-title="Позывной Надежда" data-artist="Русский Маяк" data-duration="3:42">
-              <span class="player__track-index">02</span>
-              <span class="player__track-name"><strong>Позывной Надежда</strong><span>Свет с передовой</span></span>
-              <span class="player__track-duration">3:42</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/pisma.mp3" data-title="Письма без адреса" data-artist="Русский Маяк" data-duration="4:05">
-              <span class="player__track-index">03</span>
-              <span class="player__track-name"><strong>Письма без адреса</strong><span>Свет с передовой</span></span>
-              <span class="player__track-duration">4:05</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/bratstvo.mp3" data-title="Братство" data-artist="Русский Маяк" data-duration="3:55">
-              <span class="player__track-index">04</span>
-              <span class="player__track-name"><strong>Братство</strong><span>Свет с передовой</span></span>
-              <span class="player__track-duration">3:55</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/domoy.mp3" data-title="Домой" data-artist="Русский Маяк" data-duration="3:18">
-              <span class="player__track-index">05</span>
-              <span class="player__track-name"><strong>Домой</strong><span>Свет с передовой</span></span>
-              <span class="player__track-duration">3:18</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/mayak-live.mp3" data-title="Маяк (Live)" data-artist="Русский Маяк" data-duration="4:12">
-              <span class="player__track-index">06</span>
-              <span class="player__track-name"><strong>Маяк (Live)</strong><span>Свет с передовой</span></span>
-              <span class="player__track-duration">4:12</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/tishina.mp3" data-title="Тишина после боя" data-artist="Русский Маяк" data-duration="3:47">
-              <span class="player__track-index">07</span>
-              <span class="player__track-name"><strong>Тишина после боя</strong><span>Свет с передовой</span></span>
-              <span class="player__track-duration">3:47</span>
-            </button>
-            <button class="player__track" type="button" role="listitem" data-track data-src="/audio/otschet.mp3" data-title="Обратный отсчёт" data-artist="Русский Маяк" data-duration="3:31">
-              <span class="player__track-index">08</span>
-              <span class="player__track-name"><strong>Обратный отсчёт</strong><span>Свет с передовой</span></span>
-              <span class="player__track-duration">3:31</span>
-            </button>
+            @foreach ($album->tracks as $index => $track)
+              <button
+                class="player__track @if($index === 0) is-active @endif"
+                type="button"
+                role="listitem"
+                data-track
+                data-src="{{ $track->audio_path }}"
+                data-title="{{ $track->title }}"
+                data-artist="{{ $track->artist }}"
+                data-duration="{{ $track->duration }}"
+              >
+                <span class="player__track-index">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="player__track-name"><strong>{{ $track->title }}</strong><span>{{ $album->title }}</span></span>
+                <span class="player__track-duration">{{ $track->duration }}</span>
+              </button>
+            @endforeach
           </div>
         </div>
 
-        <div class="album-body" data-reveal>
-          <h2>История создания</h2>
-          <p>
-            Работа над альбомом началась после весенней поездки в военный госпиталь, где музыканты выступали
-            перед бойцами, проходящими реабилитацию. Разговоры с ранеными и медперсоналом легли в основу
-            большинства текстов — от «Позывного Надежда» до финальной «Обратный отсчёт».
-          </p>
-          <p>
-            Часть альбома была дописана прямо в поездках: черновик песни «Домой» родился в дороге между
-            госпиталем и следующим концертом. Мы хотели, чтобы альбом звучал честно — без пафоса, но с верой в
-            то, что музыка способна поддержать даже там, где слов не хватает.
-          </p>
-        </div>
-
-        <div class="article__related">
-          <div class="section-head">
-            <p class="eyebrow">Дискография</p>
-            <h2>Другие альбомы</h2>
+        @if ($album->description)
+          <div class="album-body" data-reveal>
+            <h2>История создания</h2>
+            {!! $album->description !!}
           </div>
-          <div class="grid grid--3">
-            <article class="card">
-              <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-              <div class="card__body">
-                <span class="card__meta">2023 · Альбом</span>
-                <h3 class="card__title">Домой</h3>
-                <p class="card__text">Альбом, посвящённый тем, кто ждёт, и тем, кто возвращается.</p>
-                <a class="card__link" href="{{ route('albums.show', 'svet-s-peredovoy') }}">Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg></a>
-              </div>
-            </article>
-            <article class="card">
-              <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-              <div class="card__body">
-                <span class="card__meta">2022 · Альбом</span>
-                <h3 class="card__title">Братство</h3>
-                <p class="card__text">Песни о плече товарища и о том, что настоящая сила — в единстве.</p>
-                <a class="card__link" href="{{ route('albums.show', 'svet-s-peredovoy') }}">Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg></a>
-              </div>
-            </article>
-            <article class="card">
-              <div class="card__media card__media--placeholder"><svg aria-hidden="true"><use href="#icon-camera" /></svg></div>
-              <div class="card__body">
-                <span class="card__meta">2021 · Альбом</span>
-                <h3 class="card__title">Позывной</h3>
-                <p class="card__text">Дебютная работа группы, с которой началась дорога в госпитали и на передовую.</p>
-                <a class="card__link" href="{{ route('albums.show', 'svet-s-peredovoy') }}">Слушать альбом <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg></a>
-              </div>
-            </article>
-          </div>
-        </div>
+        @endif
       </div>
     </section>
 @endsection

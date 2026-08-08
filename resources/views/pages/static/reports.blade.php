@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Отчёты о помощи — Русский Маяк')
-@section('description', 'Открытые отчёты о благотворительных сборах и расходах группы «Русский Маяк».')
+@section('title', ($page->meta_title ?? null) ?: 'Отчёты о помощи — Русский Маяк')
+@section('description', ($page->meta_description ?? null) ?: 'Отчёты о благотворительных сборах и помощи группы «Русский Маяк».')
 @section('canonical_path', '/reports')
 @section('og_type', 'website')
 
@@ -12,35 +12,31 @@
 @section('content')
   <x-page-header
     eyebrow="Прозрачность"
-    title="Отчёты о помощи"
-    subtitle="Публикуем, на что направлены собранные средства: оборудование, гуманитарные грузы, поддержка госпиталей."
+    :title="$page->title ?? 'Отчёты о помощи'"
+    subtitle="Публикуем итоги сборов и поездок."
     current="Отчёты"
   />
 
   <section class="section">
-    <div class="container">
-      <div class="grid grid--2">
-        <article class="card" data-reveal>
-          <div class="card__body">
-            <span class="card__meta"><time datetime="2026-06-05">5 июня 2026</time></span>
-            <h2 class="card__title">Отчёт: сбор на реабилитационное оборудование</h2>
-            <p class="card__text">Собрано 2 000 000 ₽. Средства направлены на закупку тренажёров и расходных материалов для госпиталя.</p>
-            <a class="card__link" href="{{ route('home') }}#fundraising">
-              К текущему сбору <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
-            </a>
-          </div>
+    <div class="container" style="max-width: 48rem">
+      @if ($page?->body)
+        <article class="article__body" data-reveal>
+          {!! $page->body !!}
         </article>
+      @endif
 
-        <article class="card" data-reveal>
-          <div class="card__body">
-            <span class="card__meta"><time datetime="2026-03-18">18 марта 2026</time></span>
-            <h2 class="card__title">Отчёт: гуманитарный конвой</h2>
-            <p class="card__text">Закупка медикаментов и тёплых вещей. Полный список позиций и суммы — в детальном отчёте (этап CMS).</p>
-            <a class="card__link" href="{{ route('photos.show', 'gumanitarnyy-konvoy') }}">
-              Фоторепортаж <svg aria-hidden="true"><use href="#icon-arrow-right" /></svg>
-            </a>
-          </div>
-        </article>
+      <div class="grid grid--1" style="margin-top: var(--space-8)">
+        @forelse ($reports as $report)
+          <article class="card" data-reveal>
+            <div class="card__body">
+              <span class="card__meta">{{ $report->published_at?->format('d.m.Y') }}</span>
+              <h2 class="card__title">{{ $report->title }}</h2>
+              <div class="card__text">{!! $report->body !!}</div>
+            </div>
+          </article>
+        @empty
+          <p>Отчёты появятся после завершения сборов.</p>
+        @endforelse
       </div>
     </div>
   </section>
