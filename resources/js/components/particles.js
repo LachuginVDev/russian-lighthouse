@@ -1,9 +1,10 @@
 import { prefersReducedMotion } from '../core/gsap.js';
 
 /**
- * Частицы вокруг источника (маяк / лого).
- * data-particles-origin="self"|селектор
- * data-particles-mode="halo"|emit  — ореол вокруг / выброс вверх от фонаря
+ * Частицы на canvas [data-particles].
+ * mode:
+ *  - field — по всему блоку (hero)
+ *  - emit  — выброс вверх от data-particles-origin
  */
 export function initParticles() {
   if (prefersReducedMotion) return;
@@ -19,10 +20,10 @@ function mountParticles(canvas) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  const count = Number(canvas.dataset.particlesCount) || 36;
-  const spread = Number(canvas.dataset.particlesSpread) || 90;
-  const mode = canvas.dataset.particlesMode || 'emit';
-  const isHalo = mode === 'halo';
+  const count = Number(canvas.dataset.particlesCount) || 48;
+  const spread = Number(canvas.dataset.particlesSpread) || 140;
+  const mode = canvas.dataset.particlesMode || 'field';
+  const isField = mode === 'field';
 
   let particles = [];
   let width = 0;
@@ -32,6 +33,8 @@ function mountParticles(canvas) {
   let rafId = 0;
 
   const resolveOrigin = () => {
+    if (isField) return;
+
     const originMode = canvas.dataset.particlesOrigin || 'self';
     const canvasRect = canvas.getBoundingClientRect();
 
@@ -50,7 +53,7 @@ function mountParticles(canvas) {
 
     const r = el.getBoundingClientRect();
     originX = r.left + r.width / 2 - canvasRect.left;
-    originY = r.top + r.height * (isHalo ? 0.5 : 0.18) - canvasRect.top;
+    originY = r.top + r.height * 0.18 - canvasRect.top;
   };
 
   const resize = () => {
@@ -63,35 +66,20 @@ function mountParticles(canvas) {
     resolveOrigin();
   };
 
-  const createHaloParticle = () => {
-    const angle = Math.random() * Math.PI * 2;
-    // равномерно по диску вокруг лого
-    const dist = (0.35 + Math.random() * 0.65) * spread;
-    const orbitSpeed = (0.004 + Math.random() * 0.01) * (Math.random() < 0.5 ? -1 : 1);
-
-    return {
-      angle,
-      dist,
-      orbitSpeed,
-      x: originX + Math.cos(angle) * dist,
-      y: originY + Math.sin(angle) * dist,
-      r: 0.7 + Math.random() * 2.1,
-      vx: 0,
-      vy: -0.05 - Math.random() * 0.12,
-      alpha: 0.25 + Math.random() * 0.5,
-      life: 1.2 + Math.random() * 1.4,
-      age: Math.random() * 0.8,
-    };
-  };
+  const createFieldParticle = () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    r: 0.5 + Math.random() * 1.7,
+    vx: (Math.random() - 0.5) * 0.18,
+    vy: -(0.12 + Math.random() * 0.32),
+    alpha: 0.12 + Math.random() * 0.38,
+  });
 
   const createEmitParticle = (recycle = false) => {
     const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.15;
     const dist = Math.random() * spread * 0.35;
 
     return {
-      angle: 0,
-      dist: 0,
-      orbitSpeed: 0,
       x: originX + Math.cos(angle) * dist + (Math.random() - 0.5) * 12,
       y: recycle ? originY + 4 : originY + Math.sin(angle) * dist * 0.35,
       r: 0.5 + Math.random() * 1.8,
@@ -104,12 +92,7 @@ function mountParticles(canvas) {
   };
 
   const createParticle = (recycle = false) =>
-    (isHalo ? createHaloParticle() : createEmitParticle(recycle));
-
-  const resetParticle = (p) => {
-    Object.assign(p, createParticle(true), isHalo ? {} : { age: 0 });
-    if (isHalo) p.age = 0;
-  };
+    (isField ? createFieldParticle() : createEmitParticle(recycle));
 
   const init = () => {
     resize();
@@ -119,46 +102,51 @@ function mountParticles(canvas) {
   const draw = () => {
     ctx.clearRect(0, 0, width, height);
 
-    const glowR = isHalo ? spread * 1.05 : spread * 0.7;
-    const glow = ctx.createRadialGradient(originX, originY, 0, originX, originY, glowR);
-    glow.addColorStop(0, isHalo ? 'rgba(230, 198, 124, 0.22)' : 'rgba(230, 198, 124, 0.16)');
-    glow.addColorStop(0.45, 'rgba(230, 198, 124, 0.06)');
-    glow.addColorStop(1, 'rgba(230, 198, 124, 0)');
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(originX, originY, glowR, 0, Math.PI * 2);
-    ctx.fill();
+    if (!isField) {
+      const glow = ctx.createRadialGradient(originX, originY, 0, originX, originY, spread * 0.7);
+      glow.addColorStop(0, 'rgba(230, 198, 124, 0.16)');
+      glow.addColorStop(0.45, 'rgba(230, 198, 124, 0.05)');
+      glow.addColorStop(1, 'rgba(230, 198, 124, 0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(originX, originY, spread * 0.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     particles.forEach((p) => {
-      p.age += isHalo ? 0.006 : 0.004;
-
-      if (isHalo) {
-        p.angle += p.orbitSpeed;
-        // лёгкое «дыхание» радиуса
-        const breathe = 1 + Math.sin(p.age * 3 + p.dist) * 0.04;
-        p.x = originX + Math.cos(p.angle) * p.dist * breathe;
-        p.y = originY + Math.sin(p.angle) * p.dist * breathe + p.vy * 8;
-      } else {
+      if (isField) {
         p.x += p.vx;
         p.y += p.vy;
-        p.vx += (Math.random() - 0.5) * 0.02;
-      }
 
-      const fade = Math.max(0, 1 - p.age / p.life);
-      const dx = p.x - originX;
-      const dy = p.y - originY;
-      const tooFar = Math.hypot(dx, dy) > spread * (isHalo ? 1.25 : 1);
+        if (p.y < -4) {
+          p.y = height + 4;
+          p.x = Math.random() * width;
+        }
+        if (p.x < -4) p.x = width + 4;
+        if (p.x > width + 4) p.x = -4;
 
-      if (fade <= 0 || tooFar || (!isHalo && p.y < originY - spread)) {
-        resetParticle(p);
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(230, 198, 124, ${p.alpha})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
         return;
       }
 
-      // у ореола мягче пульсация прозрачности по кругу
-      const twinkle = isHalo ? 0.65 + 0.35 * Math.sin(p.age * 5 + p.angle * 3) : 1;
+      p.age += 0.004;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx += (Math.random() - 0.5) * 0.02;
+
+      const fade = Math.max(0, 1 - p.age / p.life);
+      const tooFar = Math.hypot(p.x - originX, p.y - originY) > spread;
+
+      if (fade <= 0 || tooFar || p.y < originY - spread) {
+        Object.assign(p, createEmitParticle(true));
+        return;
+      }
 
       ctx.beginPath();
-      ctx.fillStyle = `rgba(230, 198, 124, ${p.alpha * fade * twinkle})`;
+      ctx.fillStyle = `rgba(230, 198, 124, ${p.alpha * fade})`;
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fill();
     });

@@ -22,10 +22,8 @@
         class="hero__particles"
         aria-hidden="true"
         data-particles
-        data-particles-origin="[data-hero-beacon-origin]"
-        data-particles-mode="emit"
-        data-particles-count="52"
-        data-particles-spread="160"
+        data-particles-mode="field"
+        data-particles-count="64"
       ></canvas>
       <div class="hero__overlay" aria-hidden="true"></div>
 
