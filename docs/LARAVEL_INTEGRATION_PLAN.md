@@ -2,7 +2,7 @@
 
 **Статус вёрстки:** утверждена  
 **Текущий стек фронтенда:** Vite 8 MPA, Sass, GSAP, Lenis, Splitting.js, Swiper  
-**Цель этапа 2:** Laravel backend + Docker Desktop + API + SEO + удобная админка  
+**Цель этапа 2:** Laravel 13 + PostgreSQL + Docker Desktop + API + SEO + удобная админка  
 **Принцип:** все элементы утверждённой вёрстки должны быть интегрированы без потери дизайна и анимаций.
 
 ---
@@ -94,7 +94,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     Docker Desktop                          │
-│  nginx → php-fpm (Laravel) → MySQL / Redis / Mailpit        │
+│  nginx → php-fpm (Laravel 13) → PostgreSQL / Redis / Mailpit │
 │  node (Vite build assets)                                   │
 └─────────────────────────────────────────────────────────────┘
 
@@ -148,14 +148,14 @@ resources/
 
 | Слой | Технология | Ответственность |
 |---|---|---|
-| Backend | Laravel 12 | SSR, API, auth админки, очереди, SEO-роутинг |
-| Admin | Filament 3 | CRUD всех сущностей, медиа, SEO-поля |
-| DB | MySQL 8 | контент, настройки, формы |
+| Backend | Laravel 13 (PHP ≥ 8.3) | SSR, API, auth админки, очереди, SEO-роутинг |
+| Admin | Filament 3/4 (совместимая с L13) | CRUD всех сущностей, медиа, SEO-поля |
+| DB | PostgreSQL 16 | контент, настройки, формы |
 | Cache/Queue | Redis | кэш страниц/API, очереди писем |
 | Frontend assets | Vite (текущий) | SCSS, GSAP/Lenis/Swiper, page JS |
 | Media | Laravel Storage (local → S3-compatible) | audio, images, OG, QR |
 | Mail | Mailpit (dev) / SMTP (prod) | заявки с формы |
-| Search (этап 3) | Meilisearch/Scout | поиск по новостям/альбомам |
+| Search (этап 3) | PostgreSQL full-text и/или Meilisearch + Scout | поиск по новостям/альбомам |
 
 ---
 
@@ -166,20 +166,20 @@ resources/
 | Сервис | Образ / роль | Порт (host) |
 |---|---|---|
 | `nginx` | reverse-proxy, статика `/build`, `/storage` | `80` / `443` |
-| `app` | PHP 8.3-FPM + Laravel | — |
+| `app` | PHP 8.3+/8.4-FPM + Laravel 13 | — |
 | `node` | Vite build / `npm run dev` (опционально) | `5173` |
-| `mysql` | MySQL 8.0 | `3306` |
+| `pgsql` | PostgreSQL 16 | `5432` |
 | `redis` | cache + queue | `6379` |
 | `mailpit` | тестовая почта | `8025` (UI), `1025` (SMTP) |
 
-Рекомендуемый базовый стек: **Laravel Sail** или собственный compose по тому же принципу (nginx + php-fpm + mysql + redis).
+Рекомендуемый базовый стек: **Laravel Sail** с `DB_CONNECTION=pgsql` или собственный compose (nginx + php-fpm + postgres + redis).
 
 ### 3.2 Volumes и env
 
 ```
 ./  → /var/www/html
 storage/app/public → доступен как /storage
-.env → DB_*, REDIS_*, APP_URL, FILESYSTEM_DISK, MAIL_*
+.env → DB_CONNECTION=pgsql, DB_HOST=pgsql, DB_PORT=5432, DB_*, REDIS_*, APP_URL, FILESYSTEM_DISK, MAIL_*
 ```
 
 Минимальные команды:
@@ -190,6 +190,8 @@ docker compose exec app php artisan migrate --seed
 docker compose exec app php artisan storage:link
 docker compose exec node npm install && npm run build
 ```
+
+Преимущества PostgreSQL для проекта: JSON/JSONB для SEO-overrides и block-контента новостей, полнотекст (`tsvector`) под будущий поиск, надёжные миграции и concurrent indexes.
 
 ### 3.3 Окружения
 
@@ -652,7 +654,7 @@ GET /manifest.webmanifest   # опционально
 - Policies на publish/unpublish  
 - XSS: очистка HTML body (HTMLPurifier / allowed tags)  
 - Загрузка файлов: mime/size whitelist (audio/image/pdf)  
-- Backup MySQL + storage  
+- Backup PostgreSQL (`pg_dump`) + storage  
 - Логи: `contact` failures, media upload errors  
 
 ---
@@ -661,8 +663,8 @@ GET /manifest.webmanifest   # опционально
 
 ### Этап A — Каркас (Docker + Laravel)
 
-1. Создать Laravel-проект в репозитории (монолит рядом/вместо static-root по стратегии переноса).  
-2. Docker Compose / Sail: nginx, php, mysql, redis, mailpit, node.  
+1. Создать Laravel 13-проект в репозитории (монолит рядом/вместо static-root по стратегии переноса).  
+2. Docker Compose / Sail: nginx, php 8.3+, pgsql, redis, mailpit, node.  
 3. Подключить Vite, перенести SCSS/JS/шрифты.  
 4. Собрать `layouts/app` + компоненты header/footer/meta/icons из partials.  
 5. Статические Blade-страницы с текущим HTML (контент пока из массивов/seed) — **пиксельное совпадение**.  
@@ -791,8 +793,8 @@ GET /manifest.webmanifest   # опционально
 
 | Пакет | Зачем |
 |---|---|
-| `laravel/framework` ^12 | ядро |
-| `filament/filament` ^3 | админка |
+| `laravel/framework` ^13 | ядро (PHP ≥ 8.3) |
+| `filament/filament` ^3/^4 | админка (версия, совместимая с Laravel 13) |
 | `spatie/laravel-medialibrary` | медиа |
 | `spatie/laravel-sluggable` | slug |
 | `spatie/laravel-sitemap` | sitemap |
@@ -805,7 +807,7 @@ GET /manifest.webmanifest   # опционально
 
 ## 19. Порядок следующих практических шагов
 
-1. Инициализировать Laravel + Docker в новой ветке `feature/laravel-bootstrap`.  
+1. Инициализировать Laravel 13 + PostgreSQL + Docker в новой ветке `feature/laravel-bootstrap`.  
 2. Перенести layout/partials → Blade, подключить Vite assets.  
 3. Завести миграции Album/Track/News/Concert/Video/PhotoReport/Fundraising/Settings.  
 4. Поднять Filament и Settings.  
