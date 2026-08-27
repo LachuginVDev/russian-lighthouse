@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AlbumStatus;
 use App\Enums\AlbumType;
 use App\Models\Concerns\HasPublishState;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -41,6 +42,14 @@ class Album extends Model
             'is_featured_home' => 'boolean',
             'published_at' => 'datetime',
         ];
+    }
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->where('status', '!=', AlbumStatus::Draft);
     }
 
     public function tracks(): HasMany

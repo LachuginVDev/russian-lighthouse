@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminUserSeeder::class,
+            DefaultPagesSeeder::class,
         ]);
 
         // DemoContentSeeder не вызывается автоматически — только вручную для локальных тестов:

@@ -10,7 +10,6 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Illuminate\Support\Facades\Cache;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
@@ -21,6 +20,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Cache;
 use UnitEnum;
 
 /**
@@ -117,6 +117,13 @@ class SiteSettings extends Page
                                             ->columnSpanFull(),
                                         RichEditor::make('about_body')
                                             ->label('Текст')
+                                            ->columnSpanFull(),
+                                        FileUpload::make('about_image_path')
+                                            ->label('Фото блока «О группе»')
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('settings/about')
+                                            ->visibility('public')
                                             ->columnSpanFull(),
                                     ]),
                                 Section::make('Статистика')

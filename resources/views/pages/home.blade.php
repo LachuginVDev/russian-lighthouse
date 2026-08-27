@@ -56,15 +56,20 @@
 
     <!-- ================= О ГРУППЕ ================= -->
     <section class="section" id="about" aria-labelledby="about-title">
-      <div class="container about__grid">
-        <div class="about__media" data-reveal>
-          <div class="about__media-placeholder">
-            <svg aria-hidden="true"><use href="#icon-camera" /></svg>
+      @php $aboutImage = \App\Support\MediaUrl::make($settings->about_image_path); @endphp
+      <div class="container about__grid {{ ($aboutImage || $settings->stat_years) ? '' : 'about__grid--text-only' }}">
+        @if ($aboutImage || $settings->stat_years)
+          <div class="about__media" data-reveal>
+            @if ($aboutImage)
+              <img class="about__media-img" src="{{ $aboutImage }}" alt="{{ $settings->about_title ?: 'Русский Маяк' }}" />
+            @else
+              <div class="about__media-placeholder" aria-hidden="true"></div>
+            @endif
+            @if ($settings->stat_years)
+              <span class="badge badge--gold about__badge">С {{ now()->year - (int) $settings->stat_years }} года на сцене</span>
+            @endif
           </div>
-          @if ($settings->stat_years)
-            <span class="badge badge--gold about__badge">С {{ now()->year - (int) $settings->stat_years }} года на сцене</span>
-          @endif
-        </div>
+        @endif
 
         <div class="about__body">
           <p class="eyebrow" data-reveal>{{ $settings->about_eyebrow ?: 'О группе' }}</p>
@@ -76,6 +81,7 @@
             <div data-reveal>{!! $settings->about_body !!}</div>
           @endif
 
+          @if ($settings->stat_years || $settings->stat_concerts || $settings->stat_trips)
           <div class="about__stats" data-reveal>
             <div class="about__stat">
               <span class="about__stat-value" data-count="{{ $settings->stat_years }}">0</span>
@@ -90,6 +96,7 @@
               <span class="about__stat-label">Поездок в госпитали и зону СВО</span>
             </div>
           </div>
+          @endif
         </div>
       </div>
     </section>
@@ -177,7 +184,7 @@
             </div>
           </div>
         @else
-          <p data-reveal>Треки для главной ещё не добавлены. Отметьте треки «На главной» в админке.</p>
+          <p data-reveal>Треки скоро появятся на сайте.</p>
         @endif
       </div>
     </section>
@@ -217,7 +224,7 @@
               </div>
             </article>
           @empty
-            <p data-reveal>Альбомы для главной не отмечены в админке.</p>
+            <p data-reveal>Альбомы скоро появятся.</p>
           @endforelse
         </div>
       </div>
@@ -265,7 +272,7 @@
             </div>
           </div>
         @else
-          <p data-reveal>Видео для главной не отмечены в админке.</p>
+          <p data-reveal>Видео скоро появятся.</p>
         @endif
       </div>
     </section>
@@ -311,7 +318,7 @@
               </button>
             @endif
           @empty
-            <p data-reveal>Фото для главной пока нет. Отметьте фото или фотоотчёты «На главной».</p>
+            <p data-reveal>Фотографии скоро появятся.</p>
           @endforelse
         </div>
       </div>
@@ -357,7 +364,7 @@
               </div>
             </article>
           @empty
-            <p data-reveal>Новостей пока нет. Добавьте публикацию в админке и отметьте «На главной».</p>
+            <p data-reveal>Новостей пока нет.</p>
           @endforelse
         </div>
       </div>
@@ -405,13 +412,7 @@
       <div class="container">
         @if ($fundraising)
           <div class="fundraising" data-reveal>
-            <div class="fundraising__grid">
-              <div class="fundraising__gallery" aria-hidden="true">
-                <div class="fundraising__photo"></div>
-                <div class="fundraising__photo"></div>
-                <div class="fundraising__photo"></div>
-              </div>
-
+            <div class="fundraising__grid fundraising__grid--content-only">
               <div class="fundraising__content">
                 <span class="badge badge--live">Сбор {{ mb_strtolower($fundraising->status->label()) }}</span>
                 <p class="eyebrow">Благотворительность</p>
@@ -445,7 +446,7 @@
             </div>
           </div>
         @else
-          <p data-reveal>Активный сбор на главной не выбран. Создайте сбор и отметьте «На главной».</p>
+          <p data-reveal>Открытых сборов сейчас нет. Следите за новостями группы.</p>
         @endif
       </div>
     </section>
@@ -458,20 +459,32 @@
           <h2 id="requisites-title" data-reveal>Как перевести помощь</h2>
         </div>
 
+        @php
+          $hasCard = filled($settings->card_number) || filled($settings->recipient);
+          $hasLegal = filled($settings->inn) || filled($settings->bank_account) || filled($settings->bik);
+          $qr = \App\Support\MediaUrl::make($settings->qr_image_path);
+        @endphp
+
+        @if ($hasCard || $hasLegal || $qr)
         <div class="requisites-grid">
+          @if ($hasCard)
           <div class="requisite-card" data-reveal>
             <div class="requisite-card__head">
               <span class="requisite-card__icon"><svg aria-hidden="true"><use href="#icon-card" /></svg></span>
               <h3 class="requisite-card__title">Перевод на карту</h3>
             </div>
-            <div class="requisite-card__row">
-              <span class="requisite-card__label">Номер карты</span>
-              <span class="requisite-card__value">{{ $settings->card_number ?: '—' }}</span>
-            </div>
-            <div class="requisite-card__row">
-              <span class="requisite-card__label">Получатель</span>
-              <span class="requisite-card__value">{{ $settings->recipient ?: '—' }}</span>
-            </div>
+            @if ($settings->card_number)
+              <div class="requisite-card__row">
+                <span class="requisite-card__label">Номер карты</span>
+                <span class="requisite-card__value">{{ $settings->card_number }}</span>
+              </div>
+            @endif
+            @if ($settings->recipient)
+              <div class="requisite-card__row">
+                <span class="requisite-card__label">Получатель</span>
+                <span class="requisite-card__value">{{ $settings->recipient }}</span>
+              </div>
+            @endif
             @if ($cardDigits)
               <button class="requisite-card__copy" type="button" data-copy="{{ $cardDigits }}">
                 <svg aria-hidden="true"><use href="#icon-copy" /></svg>
@@ -479,36 +492,44 @@
               </button>
             @endif
           </div>
+          @endif
 
+          @if ($hasLegal)
           <div class="requisite-card" data-reveal>
             <div class="requisite-card__head">
               <span class="requisite-card__icon"><svg aria-hidden="true"><use href="#icon-document" /></svg></span>
               <h3 class="requisite-card__title">Для юридических лиц</h3>
             </div>
-            <div class="requisite-card__row">
-              <span class="requisite-card__label">ИНН</span>
-              <span class="requisite-card__value">{{ $settings->inn ?: '—' }}</span>
-            </div>
-            <div class="requisite-card__row">
-              <span class="requisite-card__label">Р/с</span>
-              <span class="requisite-card__value">{{ $settings->bank_account ?: '—' }}</span>
-            </div>
-            <div class="requisite-card__row">
-              <span class="requisite-card__label">БИК</span>
-              <span class="requisite-card__value">{{ $settings->bik ?: '—' }}</span>
-            </div>
-            @if ($settings->inn || $settings->bank_account || $settings->bik)
-              <button
-                class="requisite-card__copy"
-                type="button"
-                data-copy="ИНН {{ $settings->inn }}, Р/с {{ $settings->bank_account }}, БИК {{ $settings->bik }}"
-              >
-                <svg aria-hidden="true"><use href="#icon-copy" /></svg>
-                Скопировать реквизиты
-              </button>
+            @if ($settings->inn)
+              <div class="requisite-card__row">
+                <span class="requisite-card__label">ИНН</span>
+                <span class="requisite-card__value">{{ $settings->inn }}</span>
+              </div>
             @endif
+            @if ($settings->bank_account)
+              <div class="requisite-card__row">
+                <span class="requisite-card__label">Р/с</span>
+                <span class="requisite-card__value">{{ $settings->bank_account }}</span>
+              </div>
+            @endif
+            @if ($settings->bik)
+              <div class="requisite-card__row">
+                <span class="requisite-card__label">БИК</span>
+                <span class="requisite-card__value">{{ $settings->bik }}</span>
+              </div>
+            @endif
+            <button
+              class="requisite-card__copy"
+              type="button"
+              data-copy="ИНН {{ $settings->inn }}, Р/с {{ $settings->bank_account }}, БИК {{ $settings->bik }}"
+            >
+              <svg aria-hidden="true"><use href="#icon-copy" /></svg>
+              Скопировать реквизиты
+            </button>
           </div>
+          @endif
 
+          @if ($qr)
           <div class="requisite-card" data-reveal>
             <div class="requisite-card__head">
               <span class="requisite-card__icon"><svg aria-hidden="true"><use href="#icon-heart" /></svg></span>
@@ -517,16 +538,15 @@
             <p class="requisite-card__value" style="text-align:left">
               Отсканируйте QR-код в приложении банка — сумма перевода не ограничена.
             </p>
-            @php $qr = \App\Support\MediaUrl::make($settings->qr_image_path); @endphp
             <div class="requisite-card__qr" role="img" aria-label="QR-код для перевода через Систему быстрых платежей">
-              @if ($qr)
-                <img src="{{ $qr }}" alt="QR-код для перевода" width="160" height="160" />
-              @else
-                <p style="padding:1rem;color:var(--color-text-dim)">Загрузите QR в настройках сайта.</p>
-              @endif
+              <img src="{{ $qr }}" alt="QR-код для перевода" width="160" height="160" />
             </div>
           </div>
+          @endif
         </div>
+        @else
+          <p data-reveal>Реквизиты для перевода появятся после публикации сбора.</p>
+        @endif
       </div>
     </section>
 
@@ -558,7 +578,7 @@
           </div>
         </div>
       @else
-        <div class="container"><p data-reveal>Партнёры пока не добавлены.</p></div>
+        <div class="container"><p data-reveal>Партнёры появятся позже.</p></div>
       @endif
     </section>
 

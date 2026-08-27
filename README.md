@@ -36,7 +36,7 @@ php artisan key:generate
 ./vendor/bin/sail npm run build
 ```
 
-`--seed` создаёт только админа. Мок-контент (опционально, local):  
+`--seed` создаёт админа и страницы `/privacy`, `/reports`. Мок-контент (опционально, local):  
 `php artisan db:seed --class=DemoContentSeeder`.  
 Перед продом в `/admin/site-settings` выключите **Режим разработки** (иначе сайт с noindex).
 
@@ -158,7 +158,9 @@ alias sail='sh vendor/bin/sail'
 
 Старые `*.html` редиректят 301 на ЧПУ.
 
-Контент пока зашит в Blade (демо из утверждённой вёрстки). CMS/Filament — этап B.
+Контент берётся из PostgreSQL и редактируется в Filament (`/admin`). Мок-данные не сидятся автоматически.
+
+Перенос на VPS: [`docs/VPS_DEPLOY.md`](docs/VPS_DEPLOY.md).
 
 ---
 

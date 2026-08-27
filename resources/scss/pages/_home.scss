@@ -176,6 +176,10 @@
       align-items: center;
       gap: var(--space-9);
     }
+
+    &--text-only {
+      grid-template-columns: 1fr;
+    }
   }
 
   &__media {
@@ -186,19 +190,18 @@
     border: 1px solid var(--color-border);
   }
 
+  &__media-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   &__media-placeholder {
     position: absolute;
     inset: 0;
-    display: grid;
-    place-items: center;
     background: linear-gradient(160deg, #17223d 0%, #0d1018 70%);
-    color: var(--color-text-dim);
-
-    svg {
-      width: 56px;
-      height: 56px;
-      opacity: 0.5;
-    }
   }
 
   &__badge {
@@ -507,6 +510,10 @@
     @include lg {
       grid-template-columns: 1fr 1fr;
       align-items: center;
+    }
+
+    &--content-only {
+      grid-template-columns: 1fr;
     }
   }
 

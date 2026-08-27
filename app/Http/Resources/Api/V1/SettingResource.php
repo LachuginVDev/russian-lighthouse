@@ -2,11 +2,12 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Models\SiteSetting;
 use App\Support\MediaUrl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\SiteSetting */
+/** @mixin SiteSetting */
 class SettingResource extends JsonResource
 {
     /**
@@ -27,6 +28,12 @@ class SettingResource extends JsonResource
                 'eyebrow' => $this->hero_eyebrow,
                 'title' => $this->hero_title,
                 'subtitle' => $this->hero_subtitle,
+            ],
+            'about' => [
+                'eyebrow' => $this->about_eyebrow,
+                'title' => $this->about_title,
+                'lead' => $this->about_lead,
+                'image' => MediaUrl::make($this->about_image_path),
             ],
             'stats' => [
                 'years' => $this->stat_years,

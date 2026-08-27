@@ -20,6 +20,7 @@ class SiteSetting extends Model
         'about_title',
         'about_lead',
         'about_body',
+        'about_image_path',
         'stat_years',
         'stat_concerts',
         'stat_trips',

@@ -42,7 +42,12 @@ class HomeController extends Controller
                     Track::query()->where('is_featured_home', true)->orderBy('position')->limit(8)->get()
                 )->resolve(),
                 'albums' => AlbumResource::collection(
-                    Album::query()->published()->orderBy('sort_order')->limit(6)->get()
+                    Album::query()
+                        ->published()
+                        ->where('is_featured_home', true)
+                        ->orderBy('sort_order')
+                        ->limit(6)
+                        ->get()
                 )->resolve(),
                 'videos' => VideoResource::collection(
                     Video::query()->published()->where('is_featured_home', true)->orderBy('sort_order')->limit(8)->get()
